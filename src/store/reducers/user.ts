@@ -1,9 +1,7 @@
 import { Action, UserState } from './types/ReducersInterface'
 
 const INITIAL_STATE: UserState = {
-  data: {
-    id: 'jdjjjowjowjoopopf'
-  },
+  data: {},
   isAuthenticating: false
 }
 
