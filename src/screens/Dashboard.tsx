@@ -39,7 +39,7 @@ const Dashboard: SFC = () => {
                 <img src={`${remoteImagesUrl}/${spot.thumbnail}`} />
               </div>
               <div className='title'>{spot.company}</div>
-              <div className='price'>{spot.price === 0 ? 'Free' : `$ ${spot.price}`}</div>
+              <div className='price'>{spot.price === 0 ? 'Free' : `$ ${spot.price}/day`}</div>
             </li>
           ))
         }
