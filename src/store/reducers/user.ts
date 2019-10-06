@@ -1,4 +1,5 @@
-import { ReducerAction, UserState } from '../../types/ReducersInterface'
+import { ReducerAction } from '../types/store'
+import { UserState } from '../types/user'
 
 const INITIAL_STATE: UserState = {
   authenticationError: null,

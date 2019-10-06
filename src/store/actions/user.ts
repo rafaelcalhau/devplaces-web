@@ -1,7 +1,8 @@
 import { Action } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { AppState } from '../index'
-import { APICatchError, ReducerAction, ReducerCatchError, UserLogin, UserSession } from '../../types/ReducersInterface'
+import { APICatchError, ReducerAction, ReducerCatchError } from '../types/store'
+import { UserLogin, UserSession } from '../types/user'
 import apiClient from '../../services/apiclient'
 
 const loginFailed = (payload: APICatchError): ReducerCatchError => ({ type: 'LOGIN_FAILED', payload })
