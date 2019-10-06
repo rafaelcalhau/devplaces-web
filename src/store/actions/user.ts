@@ -12,6 +12,8 @@ const loginRequest = (): Action => ({ type: 'LOGIN_REQUEST' })
 
 export const loginSuccess = (payload: UserSession): ReducerAction => ({ type: 'LOGIN_SUCCESS', payload })
 
+export const userNotStored = (): ReducerAction => ({ type: 'USER_NOT_STORED' })
+
 export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
   dispatch(loginRequest())
 
@@ -21,4 +23,14 @@ export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action
       dispatch(loginSuccess(data))
     })
     .catch((err: AxiosError) => dispatch(loginFailed(err)))
+}
+
+export const logoutUser = (): ReducerAction => {
+  const data = window.localStorage.getItem('devplaces-user')
+
+  if (data) {
+    window.localStorage.removeItem('devplaces-user')
+  }
+
+  return { type: 'LOGOUT' }
 }

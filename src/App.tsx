@@ -1,13 +1,13 @@
 import React, { SFC, useState } from 'react'
-import { connect } from 'react-redux'
-import { BrowserRouter, Link } from 'react-router-dom'
+import { connect, useDispatch } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 import Spinner from './components/material/Spinner'
 
 import Routes from './Routes'
 import Login from './screens/Login'
 import { useStoredUser } from './modules/customHooks'
 import { AppState } from './store'
-import { loginSuccess } from './store/actions/user'
+import { logoutUser } from './store/actions/user'
 import { UserSession } from './store/types/user'
 
 import Logo from './assets/images/logo.svg'
@@ -20,10 +20,11 @@ interface AppProps {
 }
 
 const App: SFC<AppProps> = (props: AppProps) => {
+  const dispatch = useDispatch()
   const user = props.data
   const [loaderMounted, setLoaderState] = useState(true)
 
-  useStoredUser(user, loginSuccess)
+  useStoredUser(user)
 
   if (!props.isLocalStorageChecked || loaderMounted) {
     let pageLoaderClassList = 'pageloader'
@@ -43,6 +44,10 @@ const App: SFC<AppProps> = (props: AppProps) => {
     )
   }
 
+  const logout = (): void => {
+    dispatch(logoutUser())
+  }
+
   return (
     <BrowserRouter>
       <div className="container">
@@ -50,7 +55,7 @@ const App: SFC<AppProps> = (props: AppProps) => {
         {
           user.id &&
             <div className="usernav">
-              <Link to="/logout">Logout</Link>
+              <button onClick={logout}>Logout</button>
             </div>
         }
 

@@ -2,21 +2,24 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { UserSession } from '../store/types/user'
 import { loadUserSpots } from '../store/actions/spots'
+import { loginSuccess, userNotStored } from '../store/actions/user'
 import { AppState } from '../store'
 
-export const useStoredUser = (user: UserSession, actionSuccess: Function): void => {
+export const useStoredUser = (user: UserSession): void => {
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (!user.id) {
-      let data = window.localStorage.getItem('devplaces-user')
+      const data = window.localStorage.getItem('devplaces-user')
 
       if (data) {
-        data = JSON.parse(data)
-        dispatch(actionSuccess(data))
+        const userData = JSON.parse(data)
+        dispatch(loginSuccess(userData))
+      } else {
+        dispatch(userNotStored())
       }
     }
-  }, [actionSuccess, dispatch, user.id])
+  }, [dispatch, user.id])
 }
 
 export const useLoadSpots = (): void => {

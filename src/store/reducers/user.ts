@@ -43,6 +43,12 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): UserState => {
           isLocalStorageChecked: true
         }
       }())
+    case 'LOGOUT':
+    case 'USER_NOT_STORED':
+      return {
+        ...INITIAL_STATE,
+        isLocalStorageChecked: true
+      }
     default:
       return state
   }
