@@ -1,5 +1,6 @@
 import React, { SFC, useState } from 'react'
 import { connect } from 'react-redux'
+import { BrowserRouter, Link } from 'react-router-dom'
 import Spinner from './components/material/Spinner'
 
 import Routes from './Routes'
@@ -9,7 +10,7 @@ import { AppState } from './store'
 import { loginSuccess } from './store/actions/user'
 import { UserSession } from './store/types/user'
 
-import Logo from './assets/logo.svg'
+import Logo from './assets/images/logo.svg'
 import { appName } from './config/settings.json'
 import './App.css'
 
@@ -43,15 +44,23 @@ const App: SFC<AppProps> = (props: AppProps) => {
   }
 
   return (
-    <div className="container">
-      <img src={Logo} alt={appName} />
-
-      <div className="content">
+    <BrowserRouter>
+      <div className="container">
+        <img src={Logo} alt={appName} />
         {
-          !user.id ? <Login /> : <Routes />
+          user.id &&
+            <div className="usernav">
+              <Link to="/logout">Logout</Link>
+            </div>
         }
+
+        <div className="content">
+          {
+            !user.id ? <Login /> : <Routes />
+          }
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   )
 }
 
