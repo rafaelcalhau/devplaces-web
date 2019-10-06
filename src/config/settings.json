@@ -1,4 +1,5 @@
 {
   "apiUrl": "http://localhost:5000/api",
-  "appName": "DevPlaces"
+  "appName": "DevPlaces",
+  "remoteImagesUrl": "http://localhost:5000/files"
 }
