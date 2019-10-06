@@ -1,15 +1,15 @@
 .spot-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
   list-style: none;
   margin: 15px 0;
   padding: 0;
 }
 
 .spot-list li {
-  margin: 5px;
-  width: calc(50% - 10px);
+  display: flex;
+  flex-direction: column
 }
 
 .spot-list li .image {
@@ -19,7 +19,13 @@
 
 .spot-list li .title {
   font-size: 1.3em;
-  font-weight: bold
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.spot-list li .price {
+  color: #444;
+  font-size: 1.1em;
 }
 
 .spot-list li .image img {
