@@ -6,8 +6,10 @@ import { UserLogin, UserSession } from '../types/user'
 import apiClient from '../../services/apiclient'
 
 const loginFailed = (payload: APICatchError): ReducerCatchError => ({ type: 'LOGIN_FAILED', payload })
+
 const loginRequest = (): Action => ({ type: 'LOGIN_REQUEST' })
-const loginSuccess = (payload: UserSession): ReducerAction => ({ type: 'LOGIN_SUCCESS', payload })
+
+export const loginSuccess = (payload: UserSession): ReducerAction => ({ type: 'LOGIN_SUCCESS', payload })
 
 export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<any> => {
   dispatch(loginRequest())

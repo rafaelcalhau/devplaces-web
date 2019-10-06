@@ -15,4 +15,5 @@ export interface UserState {
   authenticationError?: APICatchError | null;
   data: UserSession;
   isAuthenticating: boolean;
+  isLocalStorageChecked: boolean;
 }

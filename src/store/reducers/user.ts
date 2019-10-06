@@ -4,7 +4,8 @@ import { UserState } from '../types/user'
 const INITIAL_STATE: UserState = {
   authenticationError: null,
   data: {},
-  isAuthenticating: false
+  isAuthenticating: false,
+  isLocalStorageChecked: false
 }
 
 const reducer = (state = INITIAL_STATE, action: ReducerAction): UserState => {
@@ -26,12 +27,18 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): UserState => {
         isAuthenticating: true
       }
     case 'LOGIN_SUCCESS':
-      return {
-        ...state,
-        authenticationError: null,
-        data: { ...action.payload },
-        isAuthenticating: false
-      }
+      return (function (): UserState {
+        const data = { ...action.payload }
+        window.localStorage.setItem('devplaces-user', JSON.stringify(data))
+
+        return {
+          ...state,
+          authenticationError: null,
+          data,
+          isAuthenticating: false,
+          isLocalStorageChecked: true
+        }
+      }())
     default:
       return state
   }
