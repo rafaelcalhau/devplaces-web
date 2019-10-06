@@ -75,6 +75,12 @@ button.btn:hover {
   text-align: center
 }
 
+.content .error {
+  color: red;
+  text-align: center;
+  margin: 15px 0;
+}
+
 .content form {
   display: flex;
   flex-direction: column

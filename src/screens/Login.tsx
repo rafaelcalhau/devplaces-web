@@ -1,9 +1,12 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 
+import { login } from '../store/actions/user'
 import Logo from '../assets/logo.svg'
 import { appName } from '../config/settings.json'
+import { AppState } from '../store'
 
 const Login: FC = () => {
   const useStyles = makeStyles((theme: Theme) =>
@@ -14,9 +17,30 @@ const Login: FC = () => {
       }
     })
   )
+  const authError = useSelector((state: AppState) => state.user.authenticationError)
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const [error, setError] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const authenticate = (e: any): void => {
+    e.preventDefault()
+
+    if ((email.length && email.indexOf('@') > 1) && password.length) {
+      dispatch(login({ email, password }))
+    } else {
+      setError('Email address is invalid.')
+    }
+  }
+
+  useEffect(() => {
+    if (authError && authError.name === 'Error') {
+      setError('Authentication Failed')
+    } else {
+      setError('')
+    }
+  }, [authError])
 
   return (
     <div className="container">
@@ -26,6 +50,11 @@ const Login: FC = () => {
           Rentable or free places for <strong>designers and developers</strong>.
           Find the right place to build your amazing things!
         </p>
+
+        {
+          error.length > 0 &&
+          <p className="error">{error}</p>
+        }
 
         <form id="login">
           <TextField
@@ -53,7 +82,7 @@ const Login: FC = () => {
           <button
             className="btn"
             type="submit"
-            onClick={(e): void => e.preventDefault()}>
+            onClick={authenticate}>
               Sign In
           </button>
 
