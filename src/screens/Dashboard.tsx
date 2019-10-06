@@ -5,6 +5,7 @@ import { useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl } from '../config/settings.json'
 import { AppState } from '../store'
 import { Spot } from '../store/types/spots'
+import '../assets/styles/dashboard.css'
 
 const Dashboard: SFC = () => {
   const [loaderMounted, setLoaderStatus] = useState(true)
@@ -39,7 +40,7 @@ const Dashboard: SFC = () => {
                 <img src={`${remoteImagesUrl}/${spot.thumbnail}`} />
               </div>
               <div className='title'>{spot.company}</div>
-              <div className='price'>{spot.price === 0 ? 'Free' : `$ ${spot.price}/day`}</div>
+              <div className='price'>{spot.price === 0 ? 'Free' : `$${spot.price}/day`}</div>
             </li>
           ))
         }

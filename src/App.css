@@ -127,34 +127,6 @@ button.btn:hover {
   padding: 10px 0
 }
 
-.spot-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 15px 0;
-  padding: 0;
-}
-
-.spot-list li {
-  margin: 5px;
-  width: calc(50% - 10px);
-}
-
-.spot-list li .image {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.spot-list li .title {
-  font-size: 1.3em;
-  font-weight: bold
-}
-
-.spot-list li .image img {
-  width: 100%;
-}
-
 /* Component Styles */
 #login .MuiOutlinedInput-input {
   padding: 16.5px 14px !important
