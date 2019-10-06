@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
+import React, { SFC } from 'react'
 
-const Spot: FC = () => {
+const Spot: SFC = () => {
   return <h1>Spot</h1>
 }
 

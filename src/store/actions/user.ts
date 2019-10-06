@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { Action } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { AppState } from '../index'
@@ -11,7 +12,7 @@ const loginRequest = (): Action => ({ type: 'LOGIN_REQUEST' })
 
 export const loginSuccess = (payload: UserSession): ReducerAction => ({ type: 'LOGIN_SUCCESS', payload })
 
-export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<any> => {
+export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
   dispatch(loginRequest())
 
   apiClient
@@ -19,5 +20,5 @@ export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action
     .then(({ data }) => {
       dispatch(loginSuccess(data))
     })
-    .catch((err: any) => dispatch(loginFailed(err)))
+    .catch((err: AxiosError) => dispatch(loginFailed(err)))
 }

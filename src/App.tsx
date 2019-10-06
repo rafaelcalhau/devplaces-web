@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { SFC, useState } from 'react'
 import { connect } from 'react-redux'
 import Spinner from './components/material/Spinner'
 
@@ -7,10 +7,18 @@ import Login from './screens/Login'
 import { useStoredUser } from './modules/customHooks'
 import { AppState } from './store'
 import { loginSuccess } from './store/actions/user'
-import { UserState } from './store/types/user'
+import { UserSession } from './store/types/user'
+
+import Logo from './assets/logo.svg'
+import { appName } from './config/settings.json'
 import './App.css'
 
-const App: React.FC = (props: any) => {
+interface AppProps {
+  data: UserSession;
+  isLocalStorageChecked: boolean;
+}
+
+const App: SFC<AppProps> = (props: AppProps) => {
   const user = props.data
   const [loaderMounted, setLoaderState] = useState(true)
 
@@ -34,10 +42,20 @@ const App: React.FC = (props: any) => {
     )
   }
 
-  return !user.id ? <Login /> : <Routes />
+  return (
+    <div className="container">
+      <img src={Logo} alt={appName} />
+
+      <div className="content">
+        {
+          !user.id ? <Login /> : <Routes />
+        }
+      </div>
+    </div>
+  )
 }
 
-const mapStateToProps = (state: AppState): Pick<UserState, 'data'> | Pick<UserState, 'isLocalStorageChecked'> => ({
+const mapStateToProps = (state: AppState): AppProps => ({
   data: state.user.data,
   isLocalStorageChecked: state.user.isLocalStorageChecked
 })

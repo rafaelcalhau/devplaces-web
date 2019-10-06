@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
+import React, { SFC } from 'react'
 
-const Profile: FC = () => {
+const Profile: SFC = () => {
   return <h1>Profile</h1>
 }
 

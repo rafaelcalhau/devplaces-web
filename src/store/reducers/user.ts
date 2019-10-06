@@ -3,7 +3,11 @@ import { UserState } from '../types/user'
 
 const INITIAL_STATE: UserState = {
   authenticationError: null,
-  data: {},
+  data: {
+    id: null,
+    name: null,
+    token: null
+  },
   isAuthenticating: false,
   isLocalStorageChecked: false
 }

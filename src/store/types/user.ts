@@ -6,9 +6,9 @@ export interface UserLogin {
 }
 
 export interface UserSession {
-  id?: string;
-  name?: string;
-  token?: string;
+  id: string | null;
+  name: string | null;
+  token: string | null;
 }
 
 export interface UserState {
