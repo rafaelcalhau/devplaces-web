@@ -89,7 +89,7 @@ button.btn.basic:hover {
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin: 20px auto auto;
+  margin: 20px auto;
 }
 
 .content {
@@ -98,7 +98,6 @@ button.btn.basic:hover {
   border-top: solid 4px #6300B1;
   margin-top: 20px;
   padding: 30px;
-  width: 100%;
 }
 
 .content > p {

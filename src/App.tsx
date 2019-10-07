@@ -63,7 +63,7 @@ const App: SFC<AppProps> = (props: AppProps) => {
             </button>
           </nav>
       }
-      <div className="container">
+      <div className="container" style={!user.id ? { marginTop: 62 } : { marginTop: 0 }}>
         <img src={Logo} alt={appName} />
         <div className="content">
           <Routes />

@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField'
 
 import { login } from '../store/actions/user'
 import { AppState } from '../store'
+import '../assets/styles/login.css'
 
 const Login: SFC = () => {
   const useStyles = makeStyles((theme: Theme) =>
@@ -42,7 +43,7 @@ const Login: SFC = () => {
   }, [authError])
 
   return (
-    <>
+    <div id="login">
       <p>
         Rentable or free places for <strong>designers and developers</strong>.
         Find the right place to build your amazing things!
@@ -53,7 +54,7 @@ const Login: SFC = () => {
         <p className="error">{error}</p>
       }
 
-      <form id="login">
+      <form>
         <TextField
           id="email"
           autoComplete="off"
@@ -92,7 +93,7 @@ const Login: SFC = () => {
           </button>
         </Link>
       </form>
-    </>
+    </div>
   )
 }
 

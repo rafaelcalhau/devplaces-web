@@ -2,6 +2,7 @@ import React, { SFC, useState, MouseEvent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import TextField from '@material-ui/core/TextField'
 import { signup } from '../store/actions/user'
 import '../assets/styles/signup.css'
@@ -57,13 +58,13 @@ const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   }, [props, user])
 
   return (
-    <>
+    <div id="signup">
       <h1>Create Your Account</h1>
       {
         error.length > 0 &&
         <p className="error">{error}</p>
       }
-      <form id="signup">
+      <form>
         <TextField
           id="name"
           autoComplete="off"
@@ -108,14 +109,25 @@ const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
           onChange={(e): void => setPasswConfirm(e.target.value)}
         />
 
-        <button
-          className="btn fluid"
-          type="submit"
-          onClick={register}>
-            Create Account
-        </button>
+        <div className="buttons">
+          <button
+            className="btn back"
+            onClick={(e): void => {
+              e.preventDefault()
+              props.history.goBack()
+            }}
+          >
+            <ArrowBackIcon />
+          </button>
+          <button
+            className="btn fluid"
+            type="submit"
+            onClick={register}>
+              Create Account
+          </button>
+        </div>
       </form>
-    </>
+    </div>
   )
 }
 
