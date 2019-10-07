@@ -1,4 +1,4 @@
-import React, { SFC, useEffect, useState } from 'react'
+import React, { SFC, useEffect, useState, MouseEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -22,7 +22,7 @@ const Login: SFC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const authenticate = (e: any): void => {
+  const authenticate = (e: MouseEvent): void => {
     e.preventDefault()
 
     if ((email.length && email.indexOf('@') > 1) && password.length) {
