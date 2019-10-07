@@ -1,11 +1,11 @@
 import React, { SFC, useState, MouseEvent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { RouteComponentProps } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import { signup } from '../store/actions/user'
 import '../assets/styles/signup.css'
 import { AppState } from '../store'
-import { RouteComponentProps } from 'react-router-dom'
 
 const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   const [error, setError] = useState('')

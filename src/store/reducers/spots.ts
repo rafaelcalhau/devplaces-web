@@ -5,6 +5,8 @@ const INITIAL_STATE: SpotsState = {
   data: [],
   error: null,
   loading: false,
+  submitted: false,
+  submitting: false,
   verified: false
 }
 
@@ -38,6 +40,28 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): SpotsState => {
     case 'LOGOUT':
       return {
         ...INITIAL_STATE
+      }
+    case 'SUBMIT_SPOT_FAILED':
+      return {
+        ...state,
+        error: {
+          name: action.payload.name,
+          err: action.payload.data
+        },
+        submitting: false
+      }
+    case 'SUBMIT_SPOT_REQUEST':
+      return {
+        ...state,
+        submitted: false,
+        submitting: true
+      }
+    case 'SUBMIT_SPOT_SUCCESS':
+      return {
+        ...state,
+        data: [...state.data, action.payload],
+        submitted: true,
+        submitting: false
       }
     default:
       return state

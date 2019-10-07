@@ -12,5 +12,7 @@ export interface SpotsState {
   data: Array<Spot>;
   error: null | APICatchError;
   loading: boolean;
+  submitted: boolean;
+  submitting: boolean;
   verified: boolean;
 }

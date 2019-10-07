@@ -121,6 +121,19 @@ button.btn.basic:hover {
   width: 100%;
 }
 
+.content form .buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.content form .buttons .back {
+  margin-right: 10px;
+  width: 70px;
+}
+.content form .buttons .back .MuiSvgIcon-root {
+  margin-top: 5px
+}
+
 .pageloader {
   align-items: center;
   display: flex;
@@ -150,7 +163,6 @@ button.btn.basic:hover {
   cursor: pointer;
   display: inline-block;
   color: #fff;
-  margin: 10px 0;
   padding: .8em 1em .7em;
   text-decoration: none;
   transition: .3s;
