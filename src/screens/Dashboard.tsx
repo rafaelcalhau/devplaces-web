@@ -1,5 +1,6 @@
 import React, { SFC, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import Spinner from '../components/material/Spinner'
 import { useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl } from '../config/settings.json'
@@ -37,7 +38,7 @@ const Dashboard: SFC = () => {
           spots.data.map((spot: Spot) => (
             <li key={spot._id}>
               <div className="image">
-                <img src={`${remoteImagesUrl}/${spot.thumbnail}`} />
+                <img src={`${remoteImagesUrl}/${spot.thumbnail}`} alt={spot.company} />
               </div>
               <div className='title'>{spot.company}</div>
               <div className='price'>{spot.price === 0 ? 'Free' : `$${spot.price}/day`}</div>
@@ -45,6 +46,9 @@ const Dashboard: SFC = () => {
           ))
         }
       </ul>
+      <Link to='/new-spot'>
+        <button className='btn'>Add a spot</button>
+      </Link>
     </>
   )
 }

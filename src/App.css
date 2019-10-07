@@ -47,14 +47,17 @@ button.btn:hover {
 
 button.btn.basic {
   background: none;
-  border: solid 1px #6300B1;
+  border: none;
   border-radius: 4px;
   color: #6300B1;
 }
 
 button.btn:hover {
-  background-color: #f6edfd;
-  color: #50018d;
+  background-color: #4d0186;
+}
+
+button.btn.basic:hover {
+  background-color: #e7e7e7;
 }
 
 .container {
