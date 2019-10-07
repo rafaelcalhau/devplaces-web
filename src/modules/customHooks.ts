@@ -28,7 +28,7 @@ export const useLoadSpots = (): void => {
   const token = useSelector((state: AppState) => state.user.data.token)
 
   useEffect(() => {
-    if (!spots.data.length) {
+    if (!spots.verified && !spots.data.length) {
       dispatch(loadUserSpots(token))
     }
   }, [dispatch, spots.data, token])
