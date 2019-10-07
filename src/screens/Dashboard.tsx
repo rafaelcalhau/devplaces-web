@@ -37,9 +37,10 @@ const Dashboard: SFC = () => {
         {
           spots.data.map((spot: Spot) => (
             <li key={spot._id}>
-              <div className="image">
-                <img src={`${remoteImagesUrl}/${spot.thumbnail}`} alt={spot.company} />
-              </div>
+              <div
+                className="image"
+                style={{ backgroundImage: `url(${remoteImagesUrl}/${spot.thumbnail})` }}
+              />
               <div className='title'>{spot.company}</div>
               <div className='price'>{spot.price === 0 ? 'Free' : `$${spot.price}/day`}</div>
             </li>

@@ -13,7 +13,10 @@
 }
 
 .spot-list li .image {
+  background-position: center center;
+  background-size: cover;
   display: block;
+  height: 130px;
   margin-bottom: 5px;
 }
 
