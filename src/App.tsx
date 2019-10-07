@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import Spinner from './components/material/Spinner'
 
 import Routes from './Routes'
-import Login from './screens/Login'
 import { useStoredUser } from './modules/customHooks'
 import { AppState } from './store'
 import { logoutUser } from './store/actions/user'
@@ -60,9 +59,7 @@ const App: SFC<AppProps> = (props: AppProps) => {
         }
 
         <div className="content">
-          {
-            !user.id ? <Login /> : <Routes />
-          }
+          <Routes />
         </div>
       </div>
     </BrowserRouter>

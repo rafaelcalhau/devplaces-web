@@ -1,5 +1,6 @@
 import React, { SFC, useEffect, useState, MouseEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 
@@ -84,12 +85,12 @@ const Login: SFC = () => {
 
         <div className="or">or</div>
 
-        <button
-          className="btn basic"
-          type="submit"
-          onClick={(e): void => e.preventDefault()}>
-            Create your Account
-        </button>
+        <Link to='/signup'>
+          <button
+            className="btn basic">
+              Create your Account
+          </button>
+        </Link>
       </form>
     </>
   )
