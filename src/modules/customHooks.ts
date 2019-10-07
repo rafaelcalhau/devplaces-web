@@ -31,5 +31,5 @@ export const useLoadSpots = (): void => {
     if (!spots.verified && !spots.data.length) {
       dispatch(loadUserSpots(token))
     }
-  }, [dispatch, spots.data, token])
+  }, [dispatch, spots, token])
 }
