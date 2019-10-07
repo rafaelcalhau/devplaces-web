@@ -39,9 +39,9 @@ const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
       setError('Please confirm your password')
     } else if (passw !== passwConfirm) {
       setError('The password confirmation does not match')
+    } else {
+      dispatch(signup({ name, email, password: passw }))
     }
-
-    dispatch(signup({ name, email, password: passw }))
   }
 
   useEffect(() => {
