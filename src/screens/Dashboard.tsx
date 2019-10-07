@@ -48,7 +48,7 @@ const Dashboard: SFC = () => {
         }
       </ul>
       <Link to='/new-spot'>
-        <button className='btn'>Add a spot</button>
+        <button className='btn right floated'>Add a spot</button>
       </Link>
     </>
   )

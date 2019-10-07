@@ -77,7 +77,7 @@ const Login: SFC = () => {
           onChange={(e): void => setPassword(e.target.value)}
         />
         <button
-          className="btn"
+          className="btn fluid"
           type="submit"
           onClick={authenticate}>
             Sign In
@@ -87,7 +87,7 @@ const Login: SFC = () => {
 
         <Link to='/signup'>
           <button
-            className="btn basic">
+            className="btn fluid basic">
               Create your Account
           </button>
         </Link>

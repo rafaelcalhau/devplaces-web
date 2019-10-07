@@ -109,7 +109,7 @@ const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
         />
 
         <button
-          className="btn"
+          className="btn fluid"
           type="submit"
           onClick={register}>
             Create Account

@@ -37,8 +37,15 @@ button.btn {
   font-weight: bold;
   padding: 0 20px;
   height: 48px;
-  width: 100%;
   transition: .3s
+}
+
+button.btn.fluid {
+  width: 100%;
+}
+
+button.btn.right.floated {
+  float: right
 }
 
 button.btn:hover {
@@ -64,9 +71,7 @@ button.btn.basic:hover {
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin: 40px auto auto;
-  max-width: 400px;
-  width: 100%;
+  margin: 20px auto auto;
 }
 
 .content {

@@ -135,7 +135,7 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
             <ArrowBackIcon />
           </button>
           <button
-            className="btn"
+            className="btn fluid"
             type="submit"
             onClick={register}>
               Create Spot

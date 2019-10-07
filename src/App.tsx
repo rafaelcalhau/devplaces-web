@@ -49,15 +49,14 @@ const App: SFC<AppProps> = (props: AppProps) => {
 
   return (
     <BrowserRouter>
+      {
+        user.id &&
+          <nav className="usernav">
+            <button onClick={logout}>Logout</button>
+          </nav>
+      }
       <div className="container">
         <img src={Logo} alt={appName} />
-        {
-          user.id &&
-            <div className="usernav">
-              <button onClick={logout}>Logout</button>
-            </div>
-        }
-
         <div className="content">
           <Routes />
         </div>
