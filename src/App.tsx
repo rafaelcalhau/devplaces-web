@@ -1,8 +1,9 @@
 import React, { SFC, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
+import AccountCircle from '@material-ui/icons/AccountCircle'
+import ExitToApp from '@material-ui/icons/ExitToApp'
 import Spinner from './components/material/Spinner'
-
 import Routes from './Routes'
 import { useStoredUser } from './modules/customHooks'
 import { AppState } from './store'
@@ -52,7 +53,14 @@ const App: SFC<AppProps> = (props: AppProps) => {
       {
         user.id &&
           <nav className="usernav">
-            <button onClick={logout}>Logout</button>
+            <button>
+              <AccountCircle />
+              Profile
+            </button>
+            <button onClick={logout}>
+              <ExitToApp />
+              Logout
+            </button>
           </nav>
       }
       <div className="container">
