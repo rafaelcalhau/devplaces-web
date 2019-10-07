@@ -10,6 +10,13 @@ html, body, #root {
   min-width: 100%;
 }
 
+h1 {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+
 #root {
   display: flex;
   flex-direction: column;
@@ -44,12 +51,23 @@ button.btn.fluid {
   width: 100%;
 }
 
+button.btn.icon {
+  background-color: transparent;
+  padding: .4em .7em .3em
+}
+button.btn.icon svg {
+  color: #6300B1;
+}
+
 button.btn.right.floated {
   float: right
 }
 
 button.btn:hover {
   background-color: #50018d;
+}
+button.btn.icon:hover {
+  background-color: #f2f2f2;
 }
 
 button.btn.basic {

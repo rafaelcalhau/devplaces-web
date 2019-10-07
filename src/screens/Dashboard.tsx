@@ -1,6 +1,7 @@
 import React, { SFC, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import AddIcon from '@material-ui/icons/Add'
 import Spinner from '../components/material/Spinner'
 import { useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl } from '../config/settings.json'
@@ -31,8 +32,15 @@ const Dashboard: SFC = () => {
   }
 
   return (
-    <>
-      <h1>Dashboard</h1>
+    <div id="dashboard">
+      <h1>
+        Dashboard
+        <Link to='/new-spot'>
+          <button className='btn compact icon'>
+            <AddIcon />
+          </button>
+        </Link>
+      </h1>
       <ul className='spot-list'>
         {
           spots.data.map((spot: Spot) => (
@@ -47,10 +55,7 @@ const Dashboard: SFC = () => {
           ))
         }
       </ul>
-      <Link to='/new-spot'>
-        <button className='btn right floated'>Add a spot</button>
-      </Link>
-    </>
+    </div>
   )
 }
 
