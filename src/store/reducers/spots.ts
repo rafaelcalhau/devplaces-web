@@ -35,6 +35,10 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): SpotsState => {
         loading: false,
         verified: true
       }
+    case 'LOGOUT':
+      return {
+        ...INITIAL_STATE
+      }
     default:
       return state
   }

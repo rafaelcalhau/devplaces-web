@@ -11,9 +11,18 @@ export interface UserSession {
   token: string | null;
 }
 
+export interface UserSignup {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export interface UserState {
   authenticationError?: APICatchError | null;
   data: UserSession;
   isAuthenticating: boolean;
   isLocalStorageChecked: boolean;
+  signupDone: boolean;
+  signupError: APICatchError | null;
+  signupLoading: boolean;
 }

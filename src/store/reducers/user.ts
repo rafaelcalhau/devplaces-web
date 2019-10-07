@@ -9,7 +9,10 @@ const INITIAL_STATE: UserState = {
     token: null
   },
   isAuthenticating: false,
-  isLocalStorageChecked: false
+  isLocalStorageChecked: false,
+  signupDone: false,
+  signupError: null,
+  signupLoading: false
 }
 
 const reducer = (state = INITIAL_STATE, action: ReducerAction): UserState => {
@@ -43,6 +46,28 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): UserState => {
           isLocalStorageChecked: true
         }
       }())
+    case 'SIGNUP_FAILED':
+      return {
+        ...state,
+        signupError: {
+          name: action.payload.name,
+          err: action.payload.data
+        },
+        signupLoading: false
+      }
+    case 'SIGNUP_REQUEST':
+      return {
+        ...state,
+        signupDone: false,
+        signupLoading: true
+      }
+    case 'SIGNUP_SUCCESS':
+      return {
+        ...state,
+        signupDone: true,
+        signupError: null,
+        signupLoading: false
+      }
     case 'LOGOUT':
     case 'USER_NOT_STORED':
       return {

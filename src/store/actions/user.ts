@@ -3,16 +3,24 @@ import { Action } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { AppState } from '../index'
 import { APICatchError, ReducerAction, ReducerCatchError } from '../types/store'
-import { UserLogin, UserSession } from '../types/user'
+import { UserLogin, UserSession, UserSignup } from '../types/user'
 import apiClient from '../../services/apiclient'
 
-const loginFailed = (payload: APICatchError): ReducerCatchError => ({ type: 'LOGIN_FAILED', payload })
+const loginFailed = (payload: APICatchError): ReducerCatchError => {
+  return { type: 'LOGIN_FAILED', payload }
+}
 
-const loginRequest = (): Action => ({ type: 'LOGIN_REQUEST' })
+const loginRequest = (): Action => {
+  return { type: 'LOGIN_REQUEST' }
+}
 
-export const loginSuccess = (payload: UserSession): ReducerAction => ({ type: 'LOGIN_SUCCESS', payload })
+export const loginSuccess = (payload: UserSession): ReducerAction => {
+  return { type: 'LOGIN_SUCCESS', payload }
+}
 
-export const userNotStored = (): ReducerAction => ({ type: 'USER_NOT_STORED' })
+export const userNotStored = (): ReducerAction => {
+  return { type: 'USER_NOT_STORED' }
+}
 
 export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
   dispatch(loginRequest())
@@ -33,4 +41,28 @@ export const logoutUser = (): ReducerAction => {
   }
 
   return { type: 'LOGOUT' }
+}
+
+const signupFailed = (payload: APICatchError): ReducerCatchError => {
+  return { type: 'SIGNUP_FAILED', payload }
+}
+
+const signupRequest = (): Action => {
+  return { type: 'SIGNUP_REQUEST' }
+}
+
+const signupSuccess = (): ReducerAction => {
+  return { type: 'SIGNUP_SUCCESS' }
+}
+
+export const signup = (payload: UserSignup): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
+  dispatch(signupRequest())
+
+  apiClient
+    .post('/users', { ...payload })
+    .then(() => {
+      dispatch(signupSuccess())
+      // dispatch(login(payload))
+    })
+    .catch((err: AxiosError) => dispatch(signupFailed(err)))
 }

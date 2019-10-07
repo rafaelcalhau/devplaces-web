@@ -87,6 +87,7 @@ button.btn.basic:hover {
 
 .content .error {
   color: red;
+  font-size: 1.1em;
   text-align: center;
   margin: 15px 0;
 }
@@ -159,14 +160,17 @@ button.btn.basic:hover {
 }
 
 /* Component Styles */
-#login .MuiOutlinedInput-input {
+.MuiOutlinedInput-input {
   padding: 16.5px 14px !important
 }
-#login .MuiFormLabel-root {
-  font-size: .9rem !important
+.MuiFormLabel-root {
+  font-size: .9rem !important;
 }
-#login .MuiInputLabel-formControl {
+.MuiInputLabel-formControl {
   top: 2px
+}
+.MuiTextField-root {
+  margin-bottom: 15px !important
 }
 
 /* Animations */
