@@ -54,7 +54,7 @@ const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
     if (user.signupDone) {
       props.history.push('/')
     }
-  }, [user])
+  }, [props, user])
 
   return (
     <>
