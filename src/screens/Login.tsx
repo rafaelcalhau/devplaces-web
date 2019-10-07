@@ -29,7 +29,7 @@ const Login: SFC = () => {
     if ((email.length && email.indexOf('@') > 1) && password.length) {
       dispatch(login({ email, password }))
     } else {
-      setError('Email address is invalid.')
+      setError('Please enter a valid email address')
     }
   }
 
