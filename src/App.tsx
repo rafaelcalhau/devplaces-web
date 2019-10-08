@@ -38,8 +38,7 @@ const App: SFC = () => {
   return (
     <BrowserRouter>
       {
-        user.id &&
-          <UserMenu />
+        user.id && <UserMenu />
       }
       <div className="container" style={!user.id ? { marginTop: 62 } : { marginTop: 0 }}>
         <img src={Logo} alt={appName} />

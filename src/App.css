@@ -114,6 +114,13 @@ button.btn.basic:hover {
   margin: 15px 0;
 }
 
+.content .success {
+  color: green;
+  font-size: 1.1em;
+  text-align: center;
+  margin: 15px 0;
+}
+
 .content form {
   display: flex;
   flex-direction: column
@@ -164,6 +171,14 @@ button.btn.basic:hover {
   margin: 0;
   height: 100%;
   width: 100%;
+}
+
+.pageloader.absoluted {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .pageloader .loadertext {

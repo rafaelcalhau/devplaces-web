@@ -6,13 +6,17 @@ const INITIAL_STATE: UserState = {
   data: {
     id: null,
     name: null,
+    email: null,
     token: null
   },
   isAuthenticating: false,
   isLocalStorageChecked: false,
   signupDone: false,
   signupError: null,
-  signupLoading: false
+  signupLoading: false,
+  updateDone: false,
+  updateError: null,
+  updateLoading: false
 }
 
 const reducer = (state = INITIAL_STATE, action: ReducerAction): UserState => {
@@ -67,6 +71,33 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): UserState => {
         signupDone: true,
         signupError: null,
         signupLoading: false
+      }
+    case 'USER_UPDATE_FAILED':
+      return {
+        ...state,
+        updateError: {
+          name: action.payload.name,
+          err: action.payload.data
+        },
+        updateLoading: false
+      }
+    case 'USER_UPDATE_REQUEST':
+      return {
+        ...state,
+        updateDone: false,
+        updateLoading: true
+      }
+    case 'USER_UPDATE_SUCCESS':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          name: action.payload.name,
+          email: action.payload.email
+        },
+        updateDone: true,
+        updateError: null,
+        updateLoading: false
       }
     case 'LOGOUT':
     case 'USER_NOT_STORED':

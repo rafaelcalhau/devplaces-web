@@ -8,13 +8,14 @@ export interface UserLogin {
 export interface UserSession {
   id: string | null;
   name: string | null;
+  email: string | null;
   token: string | null;
 }
 
 export interface UserSignup {
-  name: string;
-  email: string;
-  password: string;
+  name: string|null;
+  email: string|null;
+  password: string|null;
 }
 
 export interface UserState {
@@ -25,4 +26,12 @@ export interface UserState {
   signupDone: boolean;
   signupError: APICatchError | null;
   signupLoading: boolean;
+  updateDone: boolean;
+  updateError: APICatchError | null;
+  updateLoading: boolean;
+}
+
+export interface UserUpdated {
+  name: string;
+  email: string;
 }
