@@ -26,6 +26,12 @@ Install all dependencies using the NPM or YARN
   npm install # or yarn
   ```
 
+## Settings
+
+There is a settings file and you can edit it in order to configure the App's name, API server address and more.
+  
+  > src/config/settings.json
+
 ## Usage
 
 In order to run or build the project, you need to have the package Create React App installed.
