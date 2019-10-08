@@ -31,5 +31,6 @@ export const useLoadSpots = (): void => {
     if (!spots.loading && !spots.verified && !spots.data.length) {
       dispatch(loadUserSpots(token))
     }
+    // eslint-disable-next-line
   }, [])
 }
