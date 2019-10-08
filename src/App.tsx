@@ -1,35 +1,26 @@
 import React, { SFC, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
-import AccountCircle from '@material-ui/icons/AccountCircle'
-import ExitToApp from '@material-ui/icons/ExitToApp'
 import Spinner from './components/material/Spinner'
 import Routes from './Routes'
+import UserMenu from './components/UserMenu'
 import { useStoredUser } from './modules/customHooks'
 import { AppState } from './store'
-import { logoutUser } from './store/actions/user'
-import { UserSession } from './store/types/user'
 
 import Logo from './assets/images/logo.svg'
 import { appName } from './config/settings.json'
 import './App.css'
 
-interface AppProps {
-  data: UserSession;
-  isLocalStorageChecked: boolean;
-}
-
-const App: SFC<AppProps> = (props: AppProps) => {
-  const dispatch = useDispatch()
-  const user = props.data
+const App: SFC = () => {
+  const { data: user, isLocalStorageChecked } = useSelector((state: AppState) => state.user)
   const [loaderMounted, setLoaderState] = useState(true)
 
   useStoredUser(user)
 
-  if (!props.isLocalStorageChecked || loaderMounted) {
+  if (!isLocalStorageChecked || loaderMounted) {
     let pageLoaderClassList = 'pageloader'
 
-    if (props.isLocalStorageChecked) {
+    if (isLocalStorageChecked) {
       pageLoaderClassList += ' fadeOut'
 
       setTimeout(() => {
@@ -44,24 +35,11 @@ const App: SFC<AppProps> = (props: AppProps) => {
     )
   }
 
-  const logout = (): void => {
-    dispatch(logoutUser())
-  }
-
   return (
     <BrowserRouter>
       {
         user.id &&
-          <nav className="usernav">
-            <button>
-              <AccountCircle />
-              Profile
-            </button>
-            <button onClick={logout}>
-              <ExitToApp />
-              Logout
-            </button>
-          </nav>
+          <UserMenu />
       }
       <div className="container" style={!user.id ? { marginTop: 62 } : { marginTop: 0 }}>
         <img src={Logo} alt={appName} />
@@ -73,9 +51,4 @@ const App: SFC<AppProps> = (props: AppProps) => {
   )
 }
 
-const mapStateToProps = (state: AppState): AppProps => ({
-  data: state.user.data,
-  isLocalStorageChecked: state.user.isLocalStorageChecked
-})
-
-export default connect(mapStateToProps)(App)
+export default App
