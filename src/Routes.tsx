@@ -19,6 +19,7 @@ const Routes: FC = () => {
         user.id
           ? <>
             <Route path='/' exact component={Dashboard} />
+            <Route path='/edit-spot' component={Spot} />
             <Route path='/new-spot' component={Spot} />
             <Route path='/profile' component={Profile} />
           </>

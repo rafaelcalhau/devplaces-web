@@ -1,7 +1,9 @@
 import React, { SFC, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
+import EditIcon from '@material-ui/icons/Edit'
+import IconButton from '../components/material/IconButton'
 import Spinner from '../components/material/Spinner'
 import { useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl } from '../config/settings.json'
@@ -11,6 +13,7 @@ import '../assets/styles/dashboard.css'
 
 const Dashboard: SFC = () => {
   const [loaderMounted, setLoaderStatus] = useState(true)
+  const history = useHistory()
   const spots = useSelector((state: AppState) => state.spots)
 
   useLoadSpots()
@@ -45,6 +48,12 @@ const Dashboard: SFC = () => {
         {
           spots.data.map((spot: Spot) => (
             <li key={spot._id}>
+              <IconButton
+                className='edit icon'
+                label='edit'
+                onClick={(): void => history.push('/edit-spot', { data: spot })}>
+                <EditIcon />
+              </IconButton>
               <div
                 className="image"
                 style={{ backgroundImage: `url(${remoteImagesUrl}/${spot.thumbnail})` }}
