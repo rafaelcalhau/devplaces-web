@@ -1,5 +1,5 @@
 import { ReducerAction } from '../types/store'
-import { SpotsState } from '../types/spots'
+import { SpotsState, Spot } from '../types/spots'
 
 const INITIAL_STATE: SpotsState = {
   data: [],
@@ -57,12 +57,44 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): SpotsState => {
         submitting: true
       }
     case 'SUBMIT_SPOT_SUCCESS':
-      return {
-        ...state,
-        data: [...state.data, action.payload],
-        submitted: true,
-        submitting: false
-      }
+      return (function (): SpotsState {
+        if (action.payload._id) {
+          // Update Spot
+          const spots = state.data
+          const spotIndex = spots.findIndex(spot => spot._id === action.payload._id)
+
+          if (spotIndex > -1) {
+            const spot = spots.find(spot => spot._id === action.payload._id)
+            const updatedSpot: Spot = {
+              _id: action.payload._id,
+              thumbnail: action.payload.thumbnail.length ? action.payload.thumbnail : (spot && spot.thumbnail),
+              company: action.payload.company,
+              price: action.payload.price,
+              technologies: action.payload.technologies
+            }
+
+            spots.splice(spotIndex, 1)
+            spots.splice(spotIndex, 0, updatedSpot)
+
+            return {
+              ...state,
+              data: spots,
+              submitted: true,
+              submitting: false
+            }
+          } else {
+            return state
+          }
+        } else {
+          // New Spot
+          return {
+            ...state,
+            data: [...state.data, action.payload],
+            submitted: true,
+            submitting: false
+          }
+        }
+      }())
     default:
       return state
   }

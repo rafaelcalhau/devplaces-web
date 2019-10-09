@@ -45,6 +45,24 @@ const submitSpotSuccess = (payload: any): ReducerAction => {
   return { type: 'SUBMIT_SPOT_SUCCESS', payload }
 }
 
+export const saveSpot = (id: string, data: FormData, userid: string|null, token: string|null): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
+  dispatch(submitSpotRequest())
+
+  apiClient
+    .put(`/spots/${id}`, data, {
+      headers: {
+        authorization: `Bearer ${token}`,
+        userid
+      }
+    })
+    .then(({ data }) => {
+      if (data._id) {
+        dispatch(submitSpotSuccess(data))
+      }
+    })
+    .catch((err: AxiosError) => dispatch(submitSpotFailed(err)))
+}
+
 export const submitSpot = (data: FormData, userid: string|null, token: string|null): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
   dispatch(submitSpotRequest())
 

@@ -4,17 +4,21 @@ import { RouteComponentProps } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import TextField from '@material-ui/core/TextField'
+import { remoteImagesUrl } from '../config/settings.json'
 import { AppState } from '../store'
-import { submitSpot } from '../store/actions/spots'
+import { saveSpot, submitSpot } from '../store/actions/spots'
 import Camera from '../assets/images/camera.svg'
 import '../assets/styles/new.css'
 
 const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   const [error, setError] = useState('')
+  const [spotId, setSpotId] = useState('')
   const [thumbnail, setThumbnail] = useState()
   const [company, setCompany] = useState('')
   const [technologies, setTechnologies] = useState('')
   const [price, setPrice] = useState('')
+
+  const isEdit = (props.location.state && props.location.state.data)
 
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,31 +52,68 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
     } else {
       const data = new FormData()
 
-      data.append('thumbnail', thumbnail)
+      if (typeof thumbnail === 'object') {
+        data.append('thumbnail', thumbnail)
+      }
+
       data.append('company', company)
       data.append('technologies', technologies)
       data.append('price', price)
 
-      dispatch(submitSpot(data, user.id, user.token))
+      if (!isEdit) {
+        dispatch(submitSpot(data, user.id, user.token))
+      } else {
+        dispatch(saveSpot(spotId, data, user.id, user.token))
+      }
     }
   }
 
   const preview = useMemo(() => {
-    return thumbnail ? URL.createObjectURL(thumbnail) : null
+    if (typeof thumbnail === 'object') {
+      return thumbnail ? URL.createObjectURL(thumbnail) : null
+    }
+
+    return thumbnail
   }, [thumbnail])
 
+  // onMount
+  useEffect(
+    () => {
+      if (isEdit) {
+        const { _id, company, price, technologies, thumbnail } = props.location.state.data
+
+        setSpotId(_id)
+        setCompany(company)
+        setPrice(price)
+        setTechnologies(technologies.join(', '))
+
+        if (thumbnail && thumbnail.length) {
+          setThumbnail(`${remoteImagesUrl}/${thumbnail}`)
+        }
+      }
+    },
+    // eslint-disable-next-line
+    []
+  )
+
   useEffect(() => {
-    if (!requestError && submitted) {
+    if (!isEdit && !requestError && submitted) {
       setCompany('')
       setPrice('')
       setTechnologies('')
       setThumbnail(null)
     }
-  }, [requestError, submitted])
+  }, [isEdit, requestError, submitted])
 
   return (
     <>
-      <h1>Create a Spot</h1>
+      <h1>
+        {
+          !isEdit
+            ? 'Create a Spot'
+            : 'Edit your Spot'
+        }
+      </h1>
       {
         error.length > 0 &&
         <p className="error">{error}</p>
@@ -137,8 +178,13 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
           <button
             className="btn fluid"
             type="submit"
-            onClick={register}>
-              Create Spot
+            onClick={register}
+          >
+            {
+              !isEdit
+                ? 'Create Spot'
+                : 'Save Spot'
+            }
           </button>
         </div>
       </form>
