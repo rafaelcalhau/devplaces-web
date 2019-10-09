@@ -82,7 +82,6 @@ const userUpdateSuccess = (payload: UserUpdated): ReducerAction => {
 
 export const updateUser = (id: string|null, payload: UserSignup, token: string|null): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
   dispatch(userUpdateRequest())
-  console.log(payload)
 
   apiClient
     .put(`/users/${id}`, { ...payload }, {
