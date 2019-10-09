@@ -30,7 +30,7 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   const { error: requestError, submitted } = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
 
-  const handleFile = (file: Array<any> | FileList | null): void => {
+  const handleFile = (file: FileList | null): void => {
     if (!file) {
       setThumbnail(null)
     } else {
@@ -38,7 +38,7 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
     }
   }
 
-  const register = (e: MouseEvent) => {
+  const register = (e: MouseEvent): void => {
     e.preventDefault()
 
     if (!company.length) {
