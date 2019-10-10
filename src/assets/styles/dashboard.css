@@ -14,17 +14,29 @@
   position: relative;
 }
 
-.spot-list li button.edit.icon {
-  background-color: rgba(255, 255, 255, 0.8);
+.spot-list li .action-buttons {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 40px;
+  right: 5px;
+  top: 5px;
+  height: 90px;
   width: 40px;
+}
+
+.spot-list li button.delete.icon,
+.spot-list li button.edit.icon {
+  margin: 0;
+  background-color: rgba(255, 255, 255, 0.8);
   transition: .3s;
   z-index: 2;
 }
-.spot-list li button.edit.icon .MuiTouchRipple-root {
+.spot-list li button.delete.icon svg {
+  color: red
+}
+.spot-list li button.icon .MuiTouchRipple-root {
   color: #565656
 }
 .spot-list li button svg {
