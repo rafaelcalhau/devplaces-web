@@ -16,6 +16,7 @@ import '../assets/styles/dashboard.css'
 
 const Dashboard: SFC = () => {
   const dispatch = useDispatch()
+  const [spotHover, setSpotHover] = useState('')
   const [loaderMounted, setLoaderStatus] = useState(true)
   const [dialog, setDialogProps] = useState({ spotId: '', open: false, title: '', description: '' })
   const history = useHistory()
@@ -36,13 +37,20 @@ const Dashboard: SFC = () => {
   }
 
   const handleDialogClose = (): void => setDialogProps({ ...dialog, open: false })
+
   const handleDialogCancel = (): void => handleDialogClose()
+
   const handleDeleteSpot = (): void => {
     setDeletingId(dialog.spotId)
     setTimeout(() => dispatch(deleteSpot(dialog.spotId, user.id, user.token)), 300)
     handleDialogClose()
   }
+
   const handleDialogSuccess = (): void => handleDeleteSpot()
+
+  const hideActionButtons = (): void => setSpotHover('')
+
+  const showActionButtons = (spotId: string): void => setSpotHover(spotId)
 
   if (loaderMounted || !spots.verified) {
     let loaderClasses = 'pageloader'
@@ -73,14 +81,18 @@ const Dashboard: SFC = () => {
       <ul className='spot-list'>
         {
           spots.data.map((spot: Spot) => (
-            <li key={spot._id}>
+            <li
+              key={spot._id}
+              onMouseEnter={(): void => showActionButtons(spot._id)}
+              onMouseLeave={(): void => hideActionButtons()}
+            >
               {
                 isDeleting === spot._id &&
                 <div className='pageloader absoluted bg-white'>
                   <Spinner color='#fff' />
                 </div>
               }
-              <div className="action-buttons">
+              <div className="action-buttons" style={{ display: spotHover === spot._id ? 'flex' : 'none' }}>
                 <IconButton
                   className='edit icon'
                   label='edit'
