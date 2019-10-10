@@ -96,11 +96,12 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): SpotsState => {
     case 'SUBMIT_SPOT_SUCCESS':
       return (function (): SpotsState {
         if (action.payload._id) {
-          // Update Spot
           const spots = state.data
           const spotIndex = spots.findIndex(spot => spot._id === action.payload._id)
 
           if (spotIndex > -1) {
+            // Update Spot
+
             const spot = spots.find(spot => spot._id === action.payload._id)
             const updatedSpot: Spot = {
               _id: action.payload._id,
@@ -120,17 +121,16 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): SpotsState => {
               submitting: false
             }
           } else {
-            return state
-          }
-        } else {
-          // New Spot
-          return {
-            ...state,
-            data: [...state.data, action.payload],
-            submitted: true,
-            submitting: false
+            return {
+              ...state,
+              data: [...state.data, action.payload],
+              submitted: true,
+              submitting: false
+            }
           }
         }
+
+        return state
       }())
     default:
       return state
