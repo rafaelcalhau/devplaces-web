@@ -14,6 +14,43 @@ const reducer = (state = INITIAL_STATE, action: ReducerAction): SpotsState => {
   const { type } = action
 
   switch (type) {
+    case 'DELETE_SPOT_FAILED':
+      return {
+        ...state,
+        error: {
+          name: action.payload.name,
+          err: action.payload.data
+        },
+        submitting: false
+      }
+    case 'DELETE_SPOT_REQUEST':
+      return {
+        ...state,
+        submitted: false,
+        submitting: true
+      }
+    case 'DELETE_SPOT_SUCCESS':
+      return (function (): SpotsState {
+        if (action.payload) {
+          const spots = state.data
+          const spotIndex = spots.findIndex(spot => spot._id === action.payload)
+
+          if (spotIndex > -1) {
+            spots.splice(spotIndex, 1)
+
+            return {
+              ...state,
+              data: spots,
+              submitted: true,
+              submitting: false
+            }
+          } else {
+            return state
+          }
+        }
+
+        return state
+      }())
     case 'LOAD_SPOTS_FAILED':
       return {
         ...state,

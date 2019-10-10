@@ -6,6 +6,36 @@ import { APICatchError, ReducerAction, ReducerCatchError } from '../types/store'
 import { SpotsState } from '../types/spots'
 import apiClient from '../../services/apiclient'
 
+const deleteSpotFailed = (payload: APICatchError): ReducerCatchError => {
+  return { type: 'DELETE_SPOT_FAILED', payload }
+}
+
+const deleteSpotRequest = (): Action => {
+  return { type: 'DELETE_SPOT_REQUEST' }
+}
+
+const deleteSpotSuccess = (payload: string): ReducerAction => {
+  return { type: 'DELETE_SPOT_SUCCESS', payload }
+}
+
+export const deleteSpot = (id: string, userid: string|null, token: string|null): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
+  dispatch(deleteSpotRequest())
+
+  apiClient
+    .delete(`/spots/${id}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+        userid
+      }
+    })
+    .then(({ data }) => {
+      if (data.deleted.ok) {
+        dispatch(deleteSpotSuccess(id))
+      }
+    })
+    .catch((err: AxiosError) => dispatch(deleteSpotFailed(err)))
+}
+
 const loadUserSpotsFailed = (payload: APICatchError): ReducerCatchError => {
   return { type: 'LOAD_SPOTS_FAILED', payload }
 }

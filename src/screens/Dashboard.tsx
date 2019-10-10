@@ -1,5 +1,5 @@
 import React, { SFC, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
@@ -10,18 +10,22 @@ import Spinner from '../components/material/Spinner'
 import { useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl } from '../config/settings.json'
 import { AppState } from '../store'
+import { deleteSpot } from '../store/actions/spots'
 import { Spot } from '../store/types/spots'
 import '../assets/styles/dashboard.css'
 
 const Dashboard: SFC = () => {
+  const dispatch = useDispatch()
   const [loaderMounted, setLoaderStatus] = useState(true)
   const [dialog, setDialogProps] = useState({ spotId: '', open: false, title: '', description: '' })
   const history = useHistory()
+  const [isDeleting, setDeletingId] = useState('')
   const spots = useSelector((state: AppState) => state.spots)
+  const user = useSelector((state: AppState) => state.user.data)
 
   useLoadSpots()
 
-  const deleteSpot = (spot: Spot): void => {
+  const askDeleteSpot = (spot: Spot): void => {
     setDialogProps({
       ...dialog,
       spotId: spot._id,
@@ -31,12 +35,13 @@ const Dashboard: SFC = () => {
     })
   }
 
-  const handleDeleteSpot = (): void => {
-    console.log(dialog.spotId)
-  }
-
   const handleDialogClose = (): void => setDialogProps({ ...dialog, open: false })
   const handleDialogCancel = (): void => handleDialogClose()
+  const handleDeleteSpot = (): void => {
+    setDeletingId(dialog.spotId)
+    setTimeout(() => dispatch(deleteSpot(dialog.spotId, user.id, user.token)), 300)
+    handleDialogClose()
+  }
   const handleDialogSuccess = (): void => handleDeleteSpot()
 
   if (loaderMounted || !spots.verified) {
@@ -69,6 +74,12 @@ const Dashboard: SFC = () => {
         {
           spots.data.map((spot: Spot) => (
             <li key={spot._id}>
+              {
+                isDeleting === spot._id &&
+                <div className='pageloader absoluted bg-white'>
+                  <Spinner color='#fff' />
+                </div>
+              }
               <div className="action-buttons">
                 <IconButton
                   className='edit icon'
@@ -79,7 +90,7 @@ const Dashboard: SFC = () => {
                 <IconButton
                   className='delete icon'
                   label='delete'
-                  onClick={(): void => deleteSpot(spot)}>
+                  onClick={(): void => askDeleteSpot(spot)}>
                   <DeleteIcon />
                 </IconButton>
               </div>
@@ -99,6 +110,7 @@ const Dashboard: SFC = () => {
         handleCancel={handleDialogCancel}
         handleClose={handleDialogClose}
         handleSuccess={handleDialogSuccess}
+        labelCancel='Cancel'
       />
     </div>
   )
