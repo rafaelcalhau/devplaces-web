@@ -10,9 +10,11 @@ export interface Spot {
 
 export interface SpotsState {
   data: Array<Spot>;
+  deleted: boolean;
   error: null | APICatchError;
   loading: boolean;
   submitted: boolean;
   submitting: boolean;
+  updated: boolean;
   verified: boolean;
 }

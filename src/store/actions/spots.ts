@@ -6,6 +6,13 @@ import { APICatchError, ReducerAction, ReducerCatchError } from '../types/store'
 import { SpotsState } from '../types/spots'
 import apiClient from '../../services/apiclient'
 
+const cleanupSpotState = (): ReducerAction => {
+  return { type: 'CLEANUP_SPOT_STATE' }
+}
+const resetStateIdentifiers = (time = 4000): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
+  setTimeout(() => dispatch(cleanupSpotState()), time)
+}
+
 const deleteSpotFailed = (payload: APICatchError): ReducerCatchError => {
   return { type: 'DELETE_SPOT_FAILED', payload }
 }
@@ -63,6 +70,18 @@ export const loadUserSpots = (token: string|null): ThunkAction<void, AppState, n
     .catch((err: AxiosError) => dispatch(loadUserSpotsFailed(err)))
 }
 
+const saveSpotFailed = (payload: APICatchError): ReducerCatchError => {
+  return { type: 'SAVE_SPOT_FAILED', payload }
+}
+
+const saveSpotRequest = (): Action => {
+  return { type: 'SAVE_SPOT_REQUEST' }
+}
+
+const saveSpotSuccess = (payload: any): ReducerAction => {
+  return { type: 'SAVE_SPOT_SUCCESS', payload }
+}
+
 const submitSpotFailed = (payload: APICatchError): ReducerCatchError => {
   return { type: 'SUBMIT_SPOT_FAILED', payload }
 }
@@ -76,7 +95,7 @@ const submitSpotSuccess = (payload: any): ReducerAction => {
 }
 
 export const saveSpot = (id: string, data: FormData, userid: string|null, token: string|null): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
-  dispatch(submitSpotRequest())
+  dispatch(saveSpotRequest())
 
   apiClient
     .put(`/spots/${id}`, data, {
@@ -87,10 +106,11 @@ export const saveSpot = (id: string, data: FormData, userid: string|null, token:
     })
     .then(({ data }) => {
       if (data._id) {
-        dispatch(submitSpotSuccess(data))
+        dispatch(saveSpotSuccess(data))
+        dispatch(resetStateIdentifiers())
       }
     })
-    .catch((err: AxiosError) => dispatch(submitSpotFailed(err)))
+    .catch((err: AxiosError) => dispatch(saveSpotFailed(err)))
 }
 
 export const submitSpot = (data: FormData, userid: string|null, token: string|null): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
@@ -105,6 +125,7 @@ export const submitSpot = (data: FormData, userid: string|null, token: string|nu
     })
     .then(({ data }) => {
       dispatch(submitSpotSuccess(data))
+      dispatch(resetStateIdentifiers())
     })
     .catch((err: AxiosError) => dispatch(submitSpotFailed(err)))
 }

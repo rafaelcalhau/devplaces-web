@@ -12,6 +12,8 @@ import '../assets/styles/new.css'
 
 const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
   const [spotId, setSpotId] = useState('')
   const [thumbnail, setThumbnail] = useState()
   const [company, setCompany] = useState('')
@@ -31,7 +33,7 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
 
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { error: requestError, submitted } = useSelector((state: AppState) => state.spots)
+  const { error: requestError, submitted, updated } = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
 
   const handleFile = (file: FileList | null): void => {
@@ -45,7 +47,9 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   const register = (e: MouseEvent): void => {
     e.preventDefault()
 
-    if (!company.length) {
+    if (!thumbnail) {
+      setError('Please choose an image for your spot')
+    } else if (!company.length) {
       setError('Please enter your company\'s name')
     } else if (!technologies.length) {
       setError('Please enter atleast 1 technology')
@@ -59,6 +63,8 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
       data.append('company', company)
       data.append('technologies', technologies)
       data.append('price', price)
+
+      setError('')
 
       if (!isEdit) {
         dispatch(submitSpot(data, user.id, user.token))
@@ -97,13 +103,23 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   )
 
   useEffect(() => {
-    if (!isEdit && !requestError && submitted) {
-      setCompany('')
-      setPrice('')
-      setTechnologies('')
-      setThumbnail(null)
+    if (!requestError && (submitted || updated)) {
+      if (submitted) {
+        setCompany('')
+        setPrice('')
+        setTechnologies('')
+        setThumbnail(null)
+        setSuccess('Spot registered successfully!')
+      } else if (updated) {
+        setSuccess('Spot saved successfully!')
+      }
+
+      setTimeout(() => setSuccess(''), 4000)
+    } else if (requestError) {
+      setError('Sorry, something is wrong. Please try again later.')
+      setTimeout(() => setError(''), 4000)
     }
-  }, [isEdit, requestError, submitted])
+  }, [requestError, submitted, updated])
 
   return (
     <>
@@ -117,6 +133,10 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
       {
         error.length > 0 &&
         <p className="error">{error}</p>
+      }
+      {
+        (error.length === 0 && success.length > 0) &&
+        <p className="success">{success}</p>
       }
       <form id="new">
         <label
