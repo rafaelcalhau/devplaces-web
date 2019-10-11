@@ -1,5 +1,8 @@
 {
   "apiUrl": "https://www.yourwebsite.com/api",
   "appName": "DevPlaces",
-  "remoteImagesUrl": "https://www.yourwebsite.com/files"
+  "remoteImagesUrl": "https://www.yourwebsite.com/files",
+  "dev": {
+    "logger": false
+  }
 }
