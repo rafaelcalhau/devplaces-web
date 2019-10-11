@@ -35,7 +35,8 @@ Install all dependencies using the NPM or YARN
 
 ## Settings
 
-There is a settings file and you can edit it in order to configure the App's name, API server address and more.
+There is a settings file and you can utilize in order to configure the App's name, API server address and more.
+First, rename it to "settings.json" and edit it with your own data.
   
   > src/config/settings.json
 

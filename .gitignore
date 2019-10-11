@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# config
+src/config/settings.json
+src/config/settings.local.json
+
 # dependencies
 /node_modules
 /.pnp
@@ -17,6 +21,11 @@
 .env.development.local
 .env.test.local
 .env.production.local
+
+# firebase
+.firebase
+.firebaserc
+firebase.json
 
 npm-debug.log*
 yarn-debug.log*
