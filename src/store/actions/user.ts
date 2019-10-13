@@ -3,35 +3,24 @@ import { Action } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { AppState } from '../index'
 import { APICatchError, ReducerAction, ReducerCatchError } from '../types/store'
-import { UserLogin, UserSession, UserSignup, UserUpdated } from '../types/user'
+import { UserLogin, UserSignup, UserUpdated } from '../types/user'
 import apiClient from '../../services/apiclient'
-
-const loginFailed = (payload: APICatchError): ReducerCatchError => {
-  return { type: 'LOGIN_FAILED', payload }
-}
-
-const loginRequest = (): Action => {
-  return { type: 'LOGIN_REQUEST' }
-}
-
-export const loginSuccess = (payload: UserSession): ReducerAction => {
-  return { type: 'LOGIN_SUCCESS', payload }
-}
+import * as LoginActions from './login'
+import * as SignupActions from './signup'
 
 export const userNotStored = (): ReducerAction => {
   return { type: 'USER_NOT_STORED' }
 }
 
 export const login = (data: UserLogin): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
-  dispatch(loginRequest())
+  dispatch(LoginActions.loginRequest())
 
   apiClient
     .post('/authenticate', { ...data })
     .then(({ data }) => {
-      console.log(data)
-      dispatch(loginSuccess(data))
+      dispatch(LoginActions.loginSuccess(data))
     })
-    .catch((err: AxiosError) => dispatch(loginFailed(err)))
+    .catch((err: AxiosError) => dispatch(LoginActions.loginFailed(err)))
 }
 
 export const logoutUser = (): ReducerAction => {
@@ -44,28 +33,15 @@ export const logoutUser = (): ReducerAction => {
   return { type: 'LOGOUT' }
 }
 
-const signupFailed = (payload: APICatchError): ReducerCatchError => {
-  return { type: 'SIGNUP_FAILED', payload }
-}
-
-const signupRequest = (): Action => {
-  return { type: 'SIGNUP_REQUEST' }
-}
-
-const signupSuccess = (): ReducerAction => {
-  return { type: 'SIGNUP_SUCCESS' }
-}
-
 export const signup = (payload: UserSignup): ThunkAction<void, AppState, null, Action<string>> => async (dispatch): Promise<void> => {
-  dispatch(signupRequest())
+  dispatch(SignupActions.signupRequest())
 
   apiClient
     .post('/users', { ...payload })
     .then(() => {
-      dispatch(signupSuccess())
-      // dispatch(login(payload))
+      dispatch(SignupActions.signupSuccess())
     })
-    .catch((err: AxiosError) => dispatch(signupFailed(err)))
+    .catch((err: AxiosError) => dispatch(SignupActions.signupFailed(err)))
 }
 
 const userUpdateFailed = (payload: APICatchError): ReducerCatchError => {
