@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root'
 import React, { SFC, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
@@ -50,4 +51,4 @@ const App: SFC = () => {
   )
 }
 
-export default App
+export default hot(App)
