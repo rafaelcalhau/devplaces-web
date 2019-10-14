@@ -4,13 +4,14 @@ import { useHistory } from 'react-router-dom'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import HomeIcon from '@material-ui/icons/Apps'
-import { logoutUser } from '../store/actions/user'
+
+import { logout } from '../store/containers/user/actions'
 
 export default function UserMenu (): ReactElement {
   const dispatch = useDispatch()
   const history = useHistory()
   const dashboard = (): void => { history.push('/') }
-  const logout = (): void => { dispatch(logoutUser()) }
+  const doLogout = (): void => { dispatch(logout()) }
   const profile = (): void => { history.push('/profile') }
 
   return (
@@ -23,7 +24,7 @@ export default function UserMenu (): ReactElement {
         <AccountCircle />
         Profile
       </button>
-      <button onClick={logout}>
+      <button onClick={doLogout}>
         <ExitToApp />
         Logout
       </button>

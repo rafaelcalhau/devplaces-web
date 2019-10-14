@@ -5,11 +5,12 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import TextField from '@material-ui/core/TextField'
 import { AppState } from '../store'
-import { updateUser } from '../store/actions/user'
+import { updateRequest as updateUser } from '../store/containers/user/actions'
 import '../assets/styles/profile.css'
 
 const Profile: FC = () => {
   const user = useSelector((state: AppState) => state.user)
+  const [isUpdating, setUpdatingState] = useState(false)
 
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -18,6 +19,7 @@ const Profile: FC = () => {
   const [email, setEmail] = useState(user.data.email)
   const [passw, setPassw] = useState('')
   const [passwConfirm, setPasswConfirm] = useState('')
+  const [timer, setTimer] = useState()
 
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,6 +33,18 @@ const Profile: FC = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
+  // onUnmount
+  useEffect(
+    () => {
+      return () => {
+        if (timer) {
+          clearTimeout(timer)
+        }
+      }
+    },
+    [timer]
+  )
+
   const save = (e: MouseEvent): void => {
     e.preventDefault()
 
@@ -41,22 +55,35 @@ const Profile: FC = () => {
     } else if (passw !== passwConfirm) {
       setError('The password confirmation does not match')
     } else {
-      dispatch(updateUser(user.data.id, { name, email, password: passw }, user.data.token))
+      const payload = {
+        id: user.data.id,
+        name,
+        email,
+        password: passw,
+        token: user.data.token
+      }
+      setUpdatingState(true)
+      dispatch(updateUser(payload))
     }
   }
 
   useEffect(() => {
-    if (user.updateError) {
+    if (user.error) {
       setError('Sorry! Was not possible to update your profile, please try again later.')
     } else {
       setError('')
     }
 
-    if (user.updateDone) {
+    if (isUpdating && !user.error && !user.loading) {
+      const timerState = setTimeout(() => {
+        setSuccess('')
+        setUpdatingState(false)
+      }, 4000)
+
       setSuccess('You profile data was saved!')
-      setTimeout(() => setSuccess(''), 4000)
+      setTimer(timerState)
     }
-  }, [user])
+  }, [isUpdating, user])
 
   return (
     <div id="profile">

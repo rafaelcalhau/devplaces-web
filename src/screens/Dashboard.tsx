@@ -1,30 +1,48 @@
-import React, { SFC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
+
 import Dialog from '../components/material/Dialog'
 import IconButton from '../components/material/IconButton'
 import Spinner from '../components/material/Spinner'
+
 import { useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl } from '../config/settings.json'
 import { AppState } from '../store'
-import { deleteSpot } from '../store/actions/spots'
-import { Spot } from '../store/types/spots'
+import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
+import { Spot } from '../store/containers/spot/types'
 import '../assets/styles/dashboard.css'
 
-const Dashboard: SFC = () => {
+const Dashboard: FC = () => {
   const dispatch = useDispatch()
   const [spotHover, setSpotHover] = useState('')
   const [loaderMounted, setLoaderStatus] = useState(true)
   const [dialog, setDialogProps] = useState({ spotId: '', open: false, title: '', description: '' })
   const history = useHistory()
   const [isDeleting, setDeletingId] = useState('')
+  const [timer, setTimer] = useState()
   const spots = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
 
   useLoadSpots()
+
+  // onUnmount
+  useEffect(() => {
+    if (timer) {
+      return () => clearTimeout(timer)
+    }
+    // eslint-disable-next-line
+  }, [])
+
+  // onUpdate
+  useEffect(() => {
+    if (isDeleting && !spots.error && !spots.loading) {
+      setDeletingId('')
+    }
+  }, [isDeleting, spots.error, spots.loading])
 
   const askDeleteSpot = (spot: Spot): void => {
     setDialogProps({
@@ -41,9 +59,17 @@ const Dashboard: SFC = () => {
   const handleDialogCancel = (): void => handleDialogClose()
 
   const handleDeleteSpot = (): void => {
+    const payload = {
+      id: dialog.spotId,
+      userid: user.id,
+      token: user.token
+    }
+
     setDeletingId(dialog.spotId)
-    setTimeout(() => dispatch(deleteSpot(dialog.spotId, user.id, user.token)), 300)
     handleDialogClose()
+
+    const lazyDelete = setTimeout(() => dispatch(deleteSpot(payload)), 300)
+    setTimer(lazyDelete)
   }
 
   const handleDialogSuccess = (): void => handleDeleteSpot()
@@ -56,8 +82,8 @@ const Dashboard: SFC = () => {
     let loaderClasses = 'pageloader'
 
     if (spots.verified) {
-      loaderClasses += ' fadeOut'
       setTimeout(() => setLoaderStatus(false), 1000)
+      loaderClasses += ' fadeOut'
     }
 
     return (

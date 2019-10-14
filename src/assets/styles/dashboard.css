@@ -1,3 +1,7 @@
+#dashboard {
+  min-width: 820px;
+}
+
 .spot-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;

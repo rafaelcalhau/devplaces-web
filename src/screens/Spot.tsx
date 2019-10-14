@@ -4,9 +4,15 @@ import { RouteComponentProps } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import TextField from '@material-ui/core/TextField'
+
 import { remoteImagesUrl } from '../config/settings.json'
 import { AppState } from '../store'
-import { saveSpot, submitSpot } from '../store/actions/spots'
+import { SpotSubmit } from '../store/containers/spot/types.js'
+import {
+  createRequest as submitSpot,
+  updateRequest as saveSpot
+} from '../store/containers/spot/actions'
+
 import Camera from '../assets/images/camera.svg'
 import '../assets/styles/new.css'
 
@@ -21,6 +27,8 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   const [price, setPrice] = useState('')
 
   const isEdit = (props.location.state && props.location.state.data)
+  const [operation, setOperation] = useState('')
+  const [timer, setTimer] = useState()
 
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,7 +41,7 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
 
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { error: requestError, submitted, updated } = useSelector((state: AppState) => state.spots)
+  const { error: requestError } = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
 
   const handleFile = (file: FileList | null): void => {
@@ -64,12 +72,21 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
       data.append('technologies', technologies)
       data.append('price', price)
 
+      const payload: SpotSubmit = {
+        data,
+        userid: user.id,
+        token: user.token
+      }
+
       setError('')
 
       if (!isEdit) {
-        dispatch(submitSpot(data, user.id, user.token))
+        setOperation('submit')
+        dispatch(submitSpot(payload))
       } else {
-        dispatch(saveSpot(spotId, data, user.id, user.token))
+        payload.id = spotId
+        setOperation('update')
+        dispatch(saveSpot(payload))
       }
     }
   }
@@ -102,24 +119,44 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
     []
   )
 
+  // onUnmount
+  useEffect(
+    () => {
+      return () => {
+        if (timer) {
+          clearTimeout(timer)
+        }
+      }
+    },
+    [timer]
+  )
+
   useEffect(() => {
-    if (!requestError && (submitted || updated)) {
-      if (submitted) {
+    if (!requestError && operation.length) {
+      const timerMessage = setTimeout(() => {
+        console.log('setTimeout...')
+        setSuccess('')
+        setOperation('')
+      }, 4000)
+
+      if (operation === 'submit') {
         setCompany('')
         setPrice('')
         setTechnologies('')
         setThumbnail(null)
         setSuccess('Spot registered successfully!')
-      } else if (updated) {
+      } else {
         setSuccess('Spot saved successfully!')
       }
 
-      setTimeout(() => setSuccess(''), 4000)
+      setTimer(timerMessage)
     } else if (requestError) {
+      const timerMessage = setTimeout(() => setError(''), 4000)
+
       setError('Sorry, something is wrong. Please try again later.')
-      setTimeout(() => setError(''), 4000)
+      setTimer(timerMessage)
     }
-  }, [requestError, submitted, updated])
+  }, [requestError, operation])
 
   return (
     <>

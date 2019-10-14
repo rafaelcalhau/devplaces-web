@@ -28,20 +28,21 @@ module.exports = {
     'security'
   ],
   rules: {
+    '@typescript-eslint/explicit-function-return-type': 'off'
   },
-  'settings': {
-    'react': {
-      'createClass': 'createReactClass',
-      'pragma': 'React',
-      'version': 'detect',
-      'flowVersion': '0.53'
+  settings: {
+    react: {
+      createClass: 'createReactClass',
+      pragma: 'React',
+      version: 'detect',
+      flowVersion: '0.53'
     },
-    'propWrapperFunctions': [
+    propWrapperFunctions: [
         'forbidExtraProps',
         {'property': 'freeze', 'object': 'Object'},
         {'property': 'myFavoriteWrapper'}
     ],
-    'linkComponents': [
+    linkComponents: [
       'Hyperlink',
       {'name': 'Link', 'linkAttribute': 'to'}
     ]

@@ -1,19 +1,21 @@
-import React, { SFC, useState, MouseEvent, useEffect } from 'react'
+import React, { FC, useState, MouseEvent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import TextField from '@material-ui/core/TextField'
-import { signup } from '../store/actions/user'
-import '../assets/styles/signup.css'
-import { AppState } from '../store'
 
-const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
+import { AppState } from '../store'
+import { signupRequest as signup } from '../store/containers/user/actions'
+import '../assets/styles/signup.css'
+
+const Signup: FC<RouteComponentProps> = (props: RouteComponentProps) => {
   const [error, setError] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [passw, setPassw] = useState('')
   const [passwConfirm, setPasswConfirm] = useState('')
+  const [isSigningUp, setSigningUpState] = useState(false)
 
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,21 +43,22 @@ const Signup: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
     } else if (passw !== passwConfirm) {
       setError('The password confirmation does not match')
     } else {
+      setSigningUpState(true)
       dispatch(signup({ name, email, password: passw }))
     }
   }
 
   useEffect(() => {
-    if (user.signupError) {
+    if (user.error) {
       setError('Whoops! Could not create your account now, please try again later.')
     } else {
       setError('')
     }
 
-    if (user.signupDone) {
+    if (isSigningUp && !user.error && !user.loading) {
       props.history.push('/')
     }
-  }, [props, user])
+  }, [isSigningUp, props, user])
 
   return (
     <div id="signup">

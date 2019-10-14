@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { UserSession } from '../store/types/user'
-import { loadUserSpots } from '../store/actions/spots'
-import { loginSuccess } from '../store/actions/login'
-import { userNotStored } from '../store/actions/user'
+import { UserSession } from '../store/containers/user/types'
+import { loadRequest as loadUserSpots } from '../store/containers/spot/actions'
+import { loginSuccess, userNotStored } from '../store/containers/user/actions'
 import { AppState } from '../store'
 
 export const useStoredUser = (user: UserSession): void => {

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 
-import { login } from '../store/actions/user'
+import { loginRequest } from '../store/containers/user/actions'
 import { AppState } from '../store'
 import '../assets/styles/login.css'
 
@@ -17,7 +17,7 @@ const Login: SFC = () => {
       }
     })
   )
-  const authError = useSelector((state: AppState) => state.user.authenticationError)
+  const authError = useSelector((state: AppState) => state.user.error)
   const classes = useStyles()
   const dispatch = useDispatch()
   const [error, setError] = useState('')
@@ -28,14 +28,14 @@ const Login: SFC = () => {
     e.preventDefault()
 
     if ((email.length && email.indexOf('@') > 1) && password.length) {
-      dispatch(login({ email, password }))
+      dispatch(loginRequest(email, password))
     } else {
       setError('Please enter a valid email address')
     }
   }
 
   useEffect(() => {
-    if (authError && authError.name === 'Error') {
+    if (authError) {
       setError('Authentication Failed')
     } else {
       setError('')
