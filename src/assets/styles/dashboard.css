@@ -2,6 +2,41 @@
   min-width: 820px;
 }
 
+.notifications {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.notifications li {
+  border: solid 1px #DDD;
+  border-left: solid 2px #6300B1;
+  font-size: 14px;
+  line-height: 22px;
+  margin-bottom: 6px;
+  padding: 5px 5px 6px 15px;
+}
+
+.notifications li button {
+  background: none;
+  border: none;
+  padding: 4px 10px 3px 0;
+  cursor: pointer;
+}
+
+.notifications li button.accept {
+  color: green;
+}
+.notifications li button.accept:hover {
+  color: #2ba12b;
+}
+
+.notifications li button.deny {
+  color: red;
+}
+.notifications li button.deny:hover {
+  color: #ff6f6f;
+}
+
 .spot-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;

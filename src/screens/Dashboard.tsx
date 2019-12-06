@@ -1,6 +1,8 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
+import socketio from 'socket.io-client'
+import moment from 'moment'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -10,11 +12,22 @@ import IconButton from '../components/material/IconButton'
 import Spinner from '../components/material/Spinner'
 
 import { useLoadSpots } from '../modules/customHooks'
-import { remoteImagesUrl } from '../config/settings.json'
+import { remoteImagesUrl, socketUrl } from '../config/settings.local.json'
 import { AppState } from '../store'
 import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
 import { Spot } from '../store/containers/spot/types'
 import '../assets/styles/dashboard.css'
+
+type BookingRequest = {
+  _id: string;
+  date: string;
+  spot: {
+    company: string;
+  };
+  user: {
+    name: string;
+  };
+}
 
 const Dashboard: FC = () => {
   const dispatch = useDispatch()
@@ -23,11 +36,20 @@ const Dashboard: FC = () => {
   const [dialog, setDialogProps] = useState({ spotId: '', open: false, title: '', description: '' })
   const history = useHistory()
   const [isDeleting, setDeletingId] = useState('')
+  const [requests, setRequest] = useState([])
   const [timer, setTimer] = useState()
   const spots = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
 
+  const socket = useMemo(() => socketio(socketUrl, {
+    query: { userId: user.id }
+  }), [user.id])
+
   useLoadSpots()
+
+  useEffect(() => {
+    socket.on('booking_request', (request: BookingRequest) => setRequest([...requests, request] as never[]))
+  }, [requests, socket])
 
   // onUnmount
   useEffect(() => {
@@ -104,6 +126,21 @@ const Dashboard: FC = () => {
           </button>
         </Link>
       </h1>
+
+      <ul className='notifications'>
+        {
+          requests.map((request: BookingRequest) => (
+            <li key={request._id}>
+              <p>
+                <strong>{request.user.name}</strong> is requesting a spot in <strong>{request.spot.company}</strong> on <strong>{moment(new Date(request.date)).format('dddd, LL')}</strong>
+              </p>
+              <button className='accept'>Accept</button>
+              <button className='deny'>Deny</button>
+            </li>
+          ))
+        }
+      </ul>
+
       <ul className='spot-list'>
         {
           spots.data.map((spot: Spot) => (

@@ -1,5 +1,5 @@
 import { hot } from 'react-hot-loader/root'
-import React, { SFC, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import Spinner from './components/material/Spinner'
@@ -12,7 +12,7 @@ import Logo from './assets/images/logo.svg'
 import { appName } from './config/settings.json'
 import './App.css'
 
-const App: SFC = () => {
+const App: FC = () => {
   const { data: user, isLocalStorageChecked } = useSelector((state: AppState) => state.user)
   const [loaderMounted, setLoaderState] = useState(true)
 
