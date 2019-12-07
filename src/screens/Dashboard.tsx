@@ -13,21 +13,11 @@ import Spinner from '../components/material/Spinner'
 
 import { useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl, socketUrl } from '../config/settings.local.json'
+import { BookingRequest } from '../config/types'
 import { AppState } from '../store'
 import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
 import { Spot } from '../store/containers/spot/types'
 import '../assets/styles/dashboard.css'
-
-type BookingRequest = {
-  _id: string;
-  date: string;
-  spot: {
-    company: string;
-  };
-  user: {
-    name: string;
-  };
-}
 
 const Dashboard: FC = () => {
   const dispatch = useDispatch()
@@ -47,10 +37,6 @@ const Dashboard: FC = () => {
 
   useLoadSpots()
 
-  useEffect(() => {
-    socket.on('booking_request', (request: BookingRequest) => setRequest([...requests, request] as never[]))
-  }, [requests, socket])
-
   // onUnmount
   useEffect(() => {
     if (timer) {
@@ -65,6 +51,10 @@ const Dashboard: FC = () => {
       setDeletingId('')
     }
   }, [isDeleting, spots.error, spots.loading])
+
+  useEffect(() => {
+    socket.on('booking_request', (request: BookingRequest) => setRequest([...requests, request] as never[]))
+  }, [requests, socket])
 
   const askDeleteSpot = (spot: Spot): void => {
     setDialogProps({
