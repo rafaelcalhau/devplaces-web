@@ -1,12 +1,3 @@
-export interface ActionLoadBookings {
-  type: string;
-  payload: {
-    approved: boolean;
-    id: string;
-    token: string;
-  };
-}
-
 export interface ActionLogin {
   type: string;
   payload: UserLogin;
@@ -20,17 +11,6 @@ export interface ActionSignup {
 export interface ActionUpdate {
   type: string;
   payload: UserSession;
-}
-
-export interface Booking {
-  _id: string;
-  date: string;
-  spot: {
-    company: string;
-  };
-  user: {
-    name: string;
-  };
 }
 
 export enum UserActions {
@@ -69,7 +49,6 @@ export interface UserSignup {
 }
 
 export interface UserState {
-  bookings: Booking[];
   data: UserSession;
   error: boolean;
   loading: boolean;

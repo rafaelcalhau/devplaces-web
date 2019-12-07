@@ -2,7 +2,6 @@ import { Reducer } from 'redux'
 import { UserActions, UserState } from './types'
 
 const INITIAL_STATE: UserState = {
-  bookings: [],
   data: {
     id: '',
     name: '',

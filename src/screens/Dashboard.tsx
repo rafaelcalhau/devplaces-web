@@ -13,7 +13,7 @@ import Spinner from '../components/material/Spinner'
 
 import { useLoadBookings, useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl, socketUrl } from '../config/settings.local.json'
-import { Booking } from '../store/containers/user/types'
+import { Booking } from '../store/containers/bookings/types'
 import { AppState } from '../store'
 import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
 import { Spot } from '../store/containers/spot/types'
@@ -28,7 +28,7 @@ const Dashboard: FC = () => {
   const [isDeleting, setDeletingId] = useState('')
   const [requests, setRequest] = useState([])
   const [timer, setTimer] = useState()
-  const bookings = useSelector((state: AppState) => state.user.bookings)
+  const bookings = useSelector((state: AppState) => state.bookings.data)
   const spots = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
 
