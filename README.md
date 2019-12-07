@@ -9,6 +9,7 @@ Web application for the project devPlaces which is inspired in Rocketseat Omnist
 ![devPlaces](docs/images/devplaces-signin.png)
 ![devPlaces](docs/images/devplaces-signup.png)
 ![devPlaces](docs/images/devplaces-dashboard.png)
+![devPlaces](docs/images/devplaces-dashboard-requests.png)
 ![devPlaces](docs/images/devplaces-newspot.png)
 ![devPlaces](docs/images/devplaces-editspot.png)
 ![devPlaces](docs/images/devplaces-profile.png)
