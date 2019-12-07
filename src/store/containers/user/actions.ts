@@ -1,5 +1,9 @@
 import { action } from 'typesafe-actions'
-import { UserActions, UserSession, UserSignup } from './../user/types'
+import { Booking, UserActions, UserSession, UserSignup } from './../user/types'
+
+export const bookingsRequest = (approved: boolean|null, id: string, token: string) => action(UserActions.LOAD_BOOKINGS, { approved, id, token })
+export const bookingsSuccess = (data: Booking[]) => action(UserActions.LOAD_BOOKINGS_SUCCESS, { data })
+export const bookingsFailure = () => action(UserActions.LOAD_BOOKINGS_FAILURE)
 
 export const loginRequest = (email: string, password: string) => action(UserActions.LOGIN_REQUEST, { email, password })
 export const loginSuccess = (data: UserSession) => action(UserActions.LOGIN_SUCCESS, { data })

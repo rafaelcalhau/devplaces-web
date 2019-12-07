@@ -1,3 +1,12 @@
+export interface ActionLoadBookings {
+  type: string;
+  payload: {
+    approved: boolean;
+    id: string;
+    token: string;
+  };
+}
+
 export interface ActionLogin {
   type: string;
   payload: UserLogin;
@@ -13,7 +22,21 @@ export interface ActionUpdate {
   payload: UserSession;
 }
 
+export interface Booking {
+  _id: string;
+  date: string;
+  spot: {
+    company: string;
+  };
+  user: {
+    name: string;
+  };
+}
+
 export enum UserActions {
+  LOAD_BOOKINGS = '@user/LOAD_BOOKINGS',
+  LOAD_BOOKINGS_SUCCESS = '@user/LOAD_BOOKINGS_SUCCESS',
+  LOAD_BOOKINGS_FAILURE = '@user/LOAD_BOOKINGS_FAILURE',
   LOGIN_REQUEST = '@user/LOGIN_REQUEST',
   LOGIN_SUCCESS = '@user/LOGIN_SUCCESS',
   LOGIN_FAILURE = '@user/LOGIN_FAILURE',
@@ -46,8 +69,9 @@ export interface UserSignup {
 }
 
 export interface UserState {
-  error: boolean;
+  bookings: Booking[];
   data: UserSession;
+  error: boolean;
   loading: boolean;
   isLocalStorageChecked: boolean;
 }

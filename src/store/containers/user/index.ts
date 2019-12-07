@@ -2,13 +2,14 @@ import { Reducer } from 'redux'
 import { UserActions, UserState } from './types'
 
 const INITIAL_STATE: UserState = {
-  error: false,
+  bookings: [],
   data: {
     id: '',
     name: '',
     email: '',
     token: ''
   },
+  error: false,
   loading: false,
   isLocalStorageChecked: false
 }
@@ -17,6 +18,25 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
   const { type } = action
 
   switch (type) {
+    case UserActions.LOAD_BOOKINGS:
+      return {
+        ...state,
+        error: false,
+        loading: true
+      }
+    case UserActions.LOAD_BOOKINGS_FAILURE:
+      return {
+        ...state,
+        error: true,
+        loading: false
+      }
+    case UserActions.LOAD_BOOKINGS_SUCCESS:
+      return {
+        ...state,
+        bookings: [...action.payload.data],
+        error: false,
+        loading: false
+      }
     case UserActions.LOGIN_FAILURE:
       return {
         ...state,

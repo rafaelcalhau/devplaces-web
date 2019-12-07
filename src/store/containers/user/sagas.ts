@@ -1,7 +1,9 @@
 import { call, put } from 'redux-saga/effects'
-import { ActionLogin, ActionSignup, ActionUpdate } from './types'
+import { ActionLoadBookings, ActionLogin, ActionSignup, ActionUpdate } from './types'
 import api from '../../../services/apiclient'
 import {
+  bookingsFailure,
+  bookingsSuccess,
   loginFailure,
   loginSuccess,
   signupFailure,
@@ -9,6 +11,21 @@ import {
   updateFailure,
   updateSuccess
 } from './actions'
+
+export function * bookings (action: ActionLoadBookings) {
+  const { approved, id, token } = action.payload
+
+  try {
+    const response = yield call(api.get, `/users/${id}/bookings/?approved=${approved}`, {
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+    yield put(bookingsSuccess(response.data))
+  } catch {
+    yield put(bookingsFailure())
+  }
+}
 
 export function * login (action: ActionLogin) {
   const data = action.payload

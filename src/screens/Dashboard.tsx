@@ -11,9 +11,9 @@ import Dialog from '../components/material/Dialog'
 import IconButton from '../components/material/IconButton'
 import Spinner from '../components/material/Spinner'
 
-import { useLoadSpots } from '../modules/customHooks'
+import { useLoadBookings, useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl, socketUrl } from '../config/settings.local.json'
-import { BookingRequest } from '../config/types'
+import { Booking } from '../store/containers/user/types'
 import { AppState } from '../store'
 import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
 import { Spot } from '../store/containers/spot/types'
@@ -28,6 +28,7 @@ const Dashboard: FC = () => {
   const [isDeleting, setDeletingId] = useState('')
   const [requests, setRequest] = useState([])
   const [timer, setTimer] = useState()
+  const bookings = useSelector((state: AppState) => state.user.bookings)
   const spots = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
 
@@ -35,6 +36,7 @@ const Dashboard: FC = () => {
     query: { userId: user.id }
   }), [user.id])
 
+  useLoadBookings(null)
   useLoadSpots()
 
   // onUnmount
@@ -53,8 +55,12 @@ const Dashboard: FC = () => {
   }, [isDeleting, spots.error, spots.loading])
 
   useEffect(() => {
-    socket.on('booking_request', (request: BookingRequest) => setRequest([...requests, request] as never[]))
-  }, [requests, socket])
+    socket.on('booking_request', (request: Booking) => setRequest([...requests, request] as never[]))
+
+    if (!requests.length) {
+      setRequest([...bookings] as never[])
+    }
+  }, [bookings, requests, socket])
 
   const askDeleteSpot = (spot: Spot): void => {
     setDialogProps({
@@ -119,7 +125,7 @@ const Dashboard: FC = () => {
 
       <ul className='notifications'>
         {
-          requests.map((request: BookingRequest) => (
+          requests.map((request: Booking) => (
             <li key={request._id}>
               <p>
                 <strong>{request.user.name}</strong> is requesting a spot in <strong>{request.spot.company}</strong> on <strong>{moment(new Date(request.date)).format('dddd, LL')}</strong>
