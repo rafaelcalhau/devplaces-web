@@ -12,7 +12,7 @@ import IconButton from '../components/material/IconButton'
 import Spinner from '../components/material/Spinner'
 
 import { useLoadBookings, useLoadSpots } from '../modules/customHooks'
-import { remoteImagesUrl, socketUrl } from '../config/settings.local.json'
+import { remoteImagesUrl, socketUrl } from '../config/settings.json'
 import { approvalRequest, newBookingRequest } from '../store/containers/bookings/actions'
 import { Booking } from '../store/containers/bookings/types'
 import { AppState } from '../store'
@@ -33,7 +33,7 @@ const Dashboard: FC = () => {
   const user = useSelector((state: AppState) => state.user.data)
 
   const socket = useMemo(() => socketio(socketUrl, {
-    query: { userId: user.id }
+    query: { userId: user.id, type: 'web' }
   }), [user.id])
 
   useLoadBookings(null)
@@ -56,7 +56,7 @@ const Dashboard: FC = () => {
 
   useEffect(() => {
     socket.on('booking_request', (data: Booking) => dispatch(newBookingRequest(data)))
-  }, [bookings, socket])
+  }, [socket])
 
   const acceptanceRequest = (approved: boolean, bookingId: string, spotId: string): void => {
     dispatch(approvalRequest(approved, bookingId, spotId, user.id, user.token))
