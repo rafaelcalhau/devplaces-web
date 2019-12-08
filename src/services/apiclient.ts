@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiUrl as baseURL } from '../config/settings.local.json'
+import { apiUrl as baseURL } from '../config/settings.json'
 
 const api = axios.create({ baseURL })
 

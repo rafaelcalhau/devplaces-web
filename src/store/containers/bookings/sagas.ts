@@ -20,7 +20,6 @@ export function * approval (action: ActionApprovalRequest) {
       yield put(approvalFailure(bookingId))
     }
   } catch (e) {
-    console.log('*** exception*', e)
     yield put(approvalFailure(bookingId))
   }
 }
