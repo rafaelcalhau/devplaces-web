@@ -10,6 +10,7 @@ import * as UserSagas from './user/sagas'
 
 export default function * rootSaga () {
   return yield all([
+    takeLatest(BookingsActions.APPROVAL_REQUEST, BookingsSagas.approval),
     takeLatest(BookingsActions.LOAD, BookingsSagas.load),
     takeLatest(SpotActions.CREATE_REQUEST, SpotSagas.submit),
     takeLatest(SpotActions.DELETE_REQUEST, SpotSagas.remove),

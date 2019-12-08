@@ -13,6 +13,7 @@ import Spinner from '../components/material/Spinner'
 
 import { useLoadBookings, useLoadSpots } from '../modules/customHooks'
 import { remoteImagesUrl, socketUrl } from '../config/settings.local.json'
+import { approvalRequest, newBookingRequest } from '../store/containers/bookings/actions'
 import { Booking } from '../store/containers/bookings/types'
 import { AppState } from '../store'
 import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
@@ -26,7 +27,6 @@ const Dashboard: FC = () => {
   const [dialog, setDialogProps] = useState({ spotId: '', open: false, title: '', description: '' })
   const history = useHistory()
   const [isDeleting, setDeletingId] = useState('')
-  const [requests, setRequest] = useState([])
   const [timer, setTimer] = useState()
   const bookings = useSelector((state: AppState) => state.bookings.data)
   const spots = useSelector((state: AppState) => state.spots)
@@ -55,12 +55,12 @@ const Dashboard: FC = () => {
   }, [isDeleting, spots.error, spots.loading])
 
   useEffect(() => {
-    socket.on('booking_request', (request: Booking) => setRequest([...requests, request] as never[]))
+    socket.on('booking_request', (data: Booking) => dispatch(newBookingRequest(data)))
+  }, [bookings, socket])
 
-    if (!requests.length) {
-      setRequest([...bookings] as never[])
-    }
-  }, [bookings, requests, socket])
+  const acceptanceRequest = (approved: boolean, bookingId: string, spotId: string): void => {
+    dispatch(approvalRequest(approved, bookingId, spotId, user.id, user.token))
+  }
 
   const askDeleteSpot = (spot: Spot): void => {
     setDialogProps({
@@ -125,15 +125,26 @@ const Dashboard: FC = () => {
 
       <ul className='notifications'>
         {
-          requests.map((request: Booking) => (
-            <li key={request._id}>
-              <p>
-                <strong>{request.user.name}</strong> is requesting a spot in <strong>{request.spot.company}</strong> on <strong>{moment(new Date(request.date)).format('dddd, LL')}</strong>
-              </p>
-              <button className='accept'>Accept</button>
-              <button className='deny'>Deny</button>
-            </li>
-          ))
+          bookings.map((request: Booking) => {
+            const { _id, spot } = request
+            return (
+              <li key={request._id}>
+                <p>
+                  <strong>{request.user.name}</strong> is requesting a spot in <strong>{request.spot.company}</strong> on <strong>{moment(new Date(request.date)).format('dddd, LL')}</strong>
+                </p>
+                <button
+                  className='accept'
+                  onClick={() => acceptanceRequest(true, _id, spot._id)}>
+                    Accept
+                </button>
+                <button
+                  className='deny'
+                  onClick={() => acceptanceRequest(false, _id, spot._id)}>
+                    Deny
+                </button>
+              </li>
+            )
+          })
         }
       </ul>
 
