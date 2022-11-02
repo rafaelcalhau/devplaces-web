@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { apiUrl as baseURL } from '../config/settings.json'
+import settings from '../config/settings.json'
 
-const api = axios.create({ baseURL })
-
+const api = axios.create({ baseURL: settings.apiUrl })
 export default api

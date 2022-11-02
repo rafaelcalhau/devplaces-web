@@ -5,14 +5,14 @@ import { Provider } from 'react-redux'
 import createSagaMiddleware from 'redux-saga'
 import logger from 'redux-logger'
 
-import { dev } from './config/settings.json'
+import settings from './config/settings.json'
 import reducer from './store'
 import sagas from './store/containers/rootSaga'
 import App from './App'
 
 const sagaMiddleware = createSagaMiddleware()
 
-const store = dev.logger
+const store = settings.dev.logger
   ? createStore(reducer, applyMiddleware(logger, sagaMiddleware))
   : createStore(reducer, applyMiddleware(sagaMiddleware))
 

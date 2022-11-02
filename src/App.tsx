@@ -9,7 +9,7 @@ import { useStoredUser } from './modules/customHooks'
 import { AppState } from './store'
 
 import Logo from './assets/images/logo.svg'
-import { appName } from './config/settings.json'
+import settings from './config/settings.json'
 import './App.css'
 
 const App: FC = () => {
@@ -42,7 +42,7 @@ const App: FC = () => {
         user.id && <UserMenu />
       }
       <div className="container" style={!user.id ? { marginTop: 62 } : { marginTop: 0 }}>
-        <img src={Logo} alt={appName} />
+        <img src={Logo} alt={settings.appName} />
         <div className="content">
           <Routes />
         </div>

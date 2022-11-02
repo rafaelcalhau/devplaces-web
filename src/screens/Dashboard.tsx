@@ -12,7 +12,7 @@ import IconButton from '../components/material/IconButton'
 import Spinner from '../components/material/Spinner'
 
 import { useLoadBookings, useLoadSpots } from '../modules/customHooks'
-import { remoteImagesUrl, socketUrl } from '../config/settings.json'
+import settings from '../config/settings.json'
 import { approvalRequest, newBookingRequest } from '../store/containers/bookings/actions'
 import { Booking } from '../store/containers/bookings/types'
 import { AppState } from '../store'
@@ -20,6 +20,7 @@ import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
 import { Spot } from '../store/containers/spot/types'
 import '../assets/styles/dashboard.css'
 
+const { remoteImagesUrl, socketUrl } = settings
 const Dashboard: FC = () => {
   const dispatch = useDispatch()
   const [spotHover, setSpotHover] = useState('')
@@ -27,7 +28,6 @@ const Dashboard: FC = () => {
   const [dialog, setDialogProps] = useState({ spotId: '', open: false, title: '', description: '' })
   const history = useHistory()
   const [isDeleting, setDeletingId] = useState('')
-  const [timer, setTimer] = useState()
   const bookings = useSelector((state: AppState) => state.bookings.data)
   const spots = useSelector((state: AppState) => state.spots)
   const user = useSelector((state: AppState) => state.user.data)
@@ -38,14 +38,6 @@ const Dashboard: FC = () => {
 
   useLoadBookings(null)
   useLoadSpots()
-
-  // onUnmount
-  useEffect(() => {
-    if (timer) {
-      return () => clearTimeout(timer)
-    }
-    // eslint-disable-next-line
-  }, [])
 
   // onUpdate
   useEffect(() => {
@@ -86,8 +78,7 @@ const Dashboard: FC = () => {
     setDeletingId(dialog.spotId)
     handleDialogClose()
 
-    const lazyDelete = setTimeout(() => dispatch(deleteSpot(payload)), 300)
-    setTimer(lazyDelete)
+    setTimeout(() => dispatch(deleteSpot(payload)), 300)
   }
 
   const handleDialogSuccess = (): void => handleDeleteSpot()

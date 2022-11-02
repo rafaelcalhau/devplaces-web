@@ -1,11 +1,11 @@
-import React, { MouseEvent, SFC, useEffect, useMemo, useState } from 'react'
+import React, { MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import TextField from '@material-ui/core/TextField'
 
-import { remoteImagesUrl } from '../config/settings.json'
+import settings from '../config/settings.json'
 import { AppState } from '../store'
 import { SpotSubmit } from '../store/containers/spot/types.js'
 import {
@@ -16,19 +16,19 @@ import {
 import Camera from '../assets/images/camera.svg'
 import '../assets/styles/new.css'
 
-const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
+const Spot = (props: RouteComponentProps) => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const [spotId, setSpotId] = useState('')
-  const [thumbnail, setThumbnail] = useState()
-  const [company, setCompany] = useState('')
-  const [technologies, setTechnologies] = useState('')
-  const [price, setPrice] = useState('')
+  const [spotId, setSpotId] = useState<string>('')
+  const [thumbnail, setThumbnail] = useState<string|null>(null)
+  const [company, setCompany] = useState<string>('')
+  const [technologies, setTechnologies] = useState<string>('')
+  const [price, setPrice] = useState<string>('')
 
   const isEdit = (props.location.state && props.location.state.data)
-  const [operation, setOperation] = useState('')
-  const [timer, setTimer] = useState()
+  const [operation, setOperation] = useState<string>('')
+  const timerRef = useRef<NodeJS.Timeout|null>(null)
 
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,10 +45,10 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   const user = useSelector((state: AppState) => state.user.data)
 
   const handleFile = (file: FileList | null): void => {
-    if (!file) {
+    if (!Array.isArray(file)) {
       setThumbnail(null)
     } else {
-      setThumbnail(file[0])
+      setThumbnail(file[0].filename)
     }
   }
 
@@ -111,7 +111,7 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
         setTechnologies(technologies.join(', '))
 
         if (thumbnail && thumbnail.length) {
-          setThumbnail(`${remoteImagesUrl}/${thumbnail}`)
+          setThumbnail(`${settings.remoteImagesUrl}/${thumbnail}`)
         }
       }
     },
@@ -120,20 +120,15 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
   )
 
   // onUnmount
-  useEffect(
-    () => {
-      return () => {
-        if (timer) {
-          clearTimeout(timer)
-        }
-      }
-    },
-    [timer]
-  )
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [])
 
   useEffect(() => {
     if (!requestError && operation.length) {
-      const timerMessage = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         console.log('setTimeout...')
         setSuccess('')
         setOperation('')
@@ -148,13 +143,9 @@ const Spot: SFC<RouteComponentProps> = (props: RouteComponentProps) => {
       } else {
         setSuccess('Spot saved successfully!')
       }
-
-      setTimer(timerMessage)
     } else if (requestError) {
-      const timerMessage = setTimeout(() => setError(''), 4000)
-
+      timerRef.current = setTimeout(() => setError(''), 4000)
       setError('Sorry, something is wrong. Please try again later.')
-      setTimer(timerMessage)
     }
   }, [requestError, operation])
 
