@@ -1,16 +1,16 @@
 export interface ActionLogin {
-  type: string;
-  payload: UserLogin;
+  type: string
+  payload: UserLogin
 }
 
 export interface ActionSignup {
-  type: string;
-  payload: UserSignup;
+  type: string
+  payload: UserSignup
 }
 
 export interface ActionUpdate {
-  type: string;
-  payload: UserSession;
+  type: string
+  payload: UserSession
 }
 
 export enum UserActions {
@@ -31,26 +31,26 @@ export enum UserActions {
 }
 
 export interface UserLogin {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export interface UserSession {
-  id: string;
-  name: string;
-  email: string;
-  token: string;
+  id: string
+  name: string
+  email: string
+  token: string
 }
 
 export interface UserSignup {
-  name: string;
-  email: string;
-  password: string;
+  name: string
+  email: string
+  password: string
 }
 
 export interface UserState {
-  data: UserSession;
-  error: boolean;
-  loading: boolean;
-  isLocalStorageChecked: boolean;
+  data: UserSession
+  error: boolean
+  loading: boolean
+  isLocalStorageChecked: boolean
 }

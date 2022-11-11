@@ -96,7 +96,7 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
         const { email, name } = action.payload
         const storageItem = localStorage.getItem('devplaces-user')
 
-        if (storageItem) {
+        if (storageItem !== null) {
           const storedData = JSON.parse(storageItem)
 
           storedData.email = email

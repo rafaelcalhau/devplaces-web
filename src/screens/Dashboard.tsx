@@ -12,12 +12,12 @@ import IconButton from '../components/material/IconButton'
 import Spinner from '../components/material/Spinner'
 
 import { useLoadBookings, useLoadSpots } from '../modules/customHooks'
-import settings from '../config/settings.json'
-import { approvalRequest, newBookingRequest } from '../store/containers/bookings/actions'
-import { Booking } from '../store/containers/bookings/types'
-import { AppState } from '../store'
-import { deleteRequest as deleteSpot } from '../store/containers/spot/actions'
-import { Spot } from '../store/containers/spot/types'
+import settings from '../core/config/settings.json'
+import { approvalRequest, newBookingRequest } from 'src/core/store/containers/bookings/actions'
+import { Booking } from 'src/core/store/containers/bookings/types'
+import { RootState } from 'src/core/store/store'
+import { deleteRequest as deleteSpot } from 'src/core/store/containers/spot/actions'
+import { Spot } from 'src/core/store/containers/spot/types'
 import '../assets/styles/dashboard.css'
 
 const { remoteImagesUrl, socketUrl } = settings
@@ -27,10 +27,10 @@ const Dashboard: FC = () => {
   const [loaderMounted, setLoaderStatus] = useState(true)
   const [dialog, setDialogProps] = useState({ spotId: '', open: false, title: '', description: '' })
   const history = useHistory()
-  const [isDeleting, setDeletingId] = useState('')
-  const bookings = useSelector((state: AppState) => state.bookings.data)
-  const spots = useSelector((state: AppState) => state.spots)
-  const user = useSelector((state: AppState) => state.user.data)
+  const [deletedId, setDeletedId] = useState<string>('')
+  const bookings = useSelector((state: RootState) => state.bookings.data)
+  const spots = useSelector((state: RootState) => state.spots)
+  const user = useSelector((state: RootState) => state.user.data)
 
   const socket = useMemo(() => socketio(socketUrl, {
     query: { userId: user.id, type: 'web' }
@@ -41,10 +41,10 @@ const Dashboard: FC = () => {
 
   // onUpdate
   useEffect(() => {
-    if (isDeleting && !spots.error && !spots.loading) {
-      setDeletingId('')
+    if (deletedId.length > 0 && !spots.error && !spots.loading) {
+      setDeletedId('')
     }
-  }, [isDeleting, spots.error, spots.loading])
+  }, [deletedId, spots.error, spots.loading])
 
   useEffect(() => {
     socket.on('booking_request', (data: Booking) => dispatch(newBookingRequest(data)))
@@ -75,7 +75,7 @@ const Dashboard: FC = () => {
       token: user.token
     }
 
-    setDeletingId(dialog.spotId)
+    setDeletedId(dialog.spotId)
     handleDialogClose()
 
     setTimeout(() => dispatch(deleteSpot(payload)), 300)
@@ -98,13 +98,13 @@ const Dashboard: FC = () => {
     return (
       <div className={loaderClasses}>
         <Spinner color='#6300B1' />
-        <div className="loadertext">Loading available spots...</div>
+        <div className='loadertext'>Loading available spots...</div>
       </div>
     )
   }
 
   return (
-    <div id="dashboard">
+    <div id='dashboard'>
       <h1>
         Dashboard
         <Link to='/new-spot'>
@@ -125,13 +125,15 @@ const Dashboard: FC = () => {
                 </p>
                 <button
                   className='accept'
-                  onClick={() => acceptanceRequest(true, _id, spot._id)}>
-                    Accept
+                  onClick={() => acceptanceRequest(true, _id, spot._id)}
+                >
+                  Accept
                 </button>
                 <button
                   className='deny'
-                  onClick={() => acceptanceRequest(false, _id, spot._id)}>
-                    Deny
+                  onClick={() => acceptanceRequest(false, _id, spot._id)}
+                >
+                  Deny
                 </button>
               </li>
             )
@@ -148,27 +150,29 @@ const Dashboard: FC = () => {
               onMouseLeave={(): void => hideActionButtons()}
             >
               {
-                isDeleting === spot._id &&
-                <div className='pageloader absoluted bg-white'>
-                  <Spinner color='#fff' />
-                </div>
+                deletedId === spot._id &&
+                  <div className='pageloader absoluted bg-white'>
+                    <Spinner color='#fff' />
+                  </div>
               }
-              <div className="action-buttons" style={{ display: spotHover === spot._id ? 'flex' : 'none' }}>
+              <div className='action-buttons' style={{ display: spotHover === spot._id ? 'flex' : 'none' }}>
                 <IconButton
                   className='edit icon'
                   label='edit'
-                  onClick={(): void => history.push('/edit-spot', { data: spot })}>
+                  onClick={() => { history.push('/edit-spot', { data: spot }) }}
+                >
                   <EditIcon />
                 </IconButton>
                 <IconButton
                   className='delete icon'
                   label='delete'
-                  onClick={(): void => askDeleteSpot(spot)}>
+                  onClick={() => { askDeleteSpot(spot) }}
+                >
                   <DeleteIcon />
                 </IconButton>
               </div>
               <div
-                className="image"
+                className='image'
                 style={{ backgroundImage: `url(${remoteImagesUrl}/${spot.thumbnail})` }}
               />
               <div className='title'>{spot.company}</div>

@@ -4,8 +4,7 @@ import { useHistory } from 'react-router-dom'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import HomeIcon from '@material-ui/icons/Apps'
-
-import { logout } from '../store/containers/user/actions'
+import { logout } from 'src/core/store/containers/user/actions'
 
 export default function UserMenu (): ReactElement {
   const dispatch = useDispatch()
@@ -15,7 +14,7 @@ export default function UserMenu (): ReactElement {
   const profile = (): void => { history.push('/profile') }
 
   return (
-    <nav className="usernav">
+    <nav className='usernav'>
       <button onClick={dashboard}>
         <HomeIcon />
         Dashboard

@@ -1,0 +1,9 @@
+{
+  "apiUrl": "http://localhost:3001/api",
+  "appName": "DevPlaces",
+  "dev": {
+    "logger": false
+  },
+  "remoteImagesUrl": "http://localhost:3001/files",
+  "socketUrl": "http://localhost:3001"
+}

@@ -7,9 +7,10 @@ import { UserActions } from './user/types'
 import * as BookingsSagas from './bookings/sagas'
 import * as SpotSagas from './spot/sagas'
 import * as UserSagas from './user/sagas'
+import { GeneratorResponse } from 'src/core/interfaces/generator-response'
 
 export default function * rootSaga () {
-  return yield all([
+  const sagas: GeneratorResponse<any[]> = yield all([
     takeLatest(BookingsActions.APPROVAL_REQUEST, BookingsSagas.approval),
     takeLatest(BookingsActions.LOAD, BookingsSagas.load),
     takeLatest(SpotActions.CREATE_REQUEST, SpotSagas.submit),
@@ -20,4 +21,6 @@ export default function * rootSaga () {
     takeLatest(UserActions.SIGNUP_REQUEST, UserSagas.signup),
     takeLatest(UserActions.UPDATE_REQUEST, UserSagas.update)
   ])
+
+  return sagas
 }

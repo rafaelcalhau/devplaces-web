@@ -14,31 +14,31 @@ const Transition = React.forwardRef<unknown, TransitionProps>(function Transitio
 })
 
 interface DialogProps {
-  description?: string;
-  handleCancel?: Function;
-  handleClose?: Function;
-  handleSuccess?: Function;
-  labelCancel?: string;
-  labelOk?: string;
-  open: boolean;
-  title: string;
+  description?: string
+  handleCancel?: Function
+  handleClose?: Function
+  handleSuccess?: Function
+  labelCancel?: string
+  labelOk?: string
+  open: boolean
+  title: string
 }
 
 function MaterialDialog (props: DialogProps): React.ReactElement {
   const _handleCancel = (): void => {
-    if (props.handleCancel) {
+    if (props.handleCancel != null) {
       props.handleCancel()
     }
   }
 
   const _handleClose = (): void => {
-    if (props.handleClose) {
+    if (props.handleClose != null) {
       props.handleClose()
     }
   }
 
   const _handleSuccess = (): void => {
-    if (props.handleSuccess) {
+    if (props.handleSuccess != null) {
       props.handleSuccess()
     }
   }
@@ -53,20 +53,19 @@ function MaterialDialog (props: DialogProps): React.ReactElement {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
-      {
-        props.description &&
+      {(props.description?.length ?? 0) > 0 && (
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <span dangerouslySetInnerHTML={{ __html: props ? props.description : '' }}></span>
+            <span dangerouslySetInnerHTML={{ __html: props?.description ?? '' }}></span>
           </DialogContentText>
         </DialogContent>
-      }
+      )}
       <DialogActions>
         <Button onClick={_handleCancel} color="primary">
-          {(props && props.labelCancel) || 'Disagree'}
+          {props?.labelCancel ?? 'Disagree'}
         </Button>
         <Button onClick={_handleSuccess} color="primary" autoFocus>
-          {(props && props.labelOk) || 'Ok'}
+          {props?.labelOk ?? 'Ok'}
         </Button>
       </DialogActions>
     </Dialog>

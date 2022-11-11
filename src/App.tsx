@@ -1,36 +1,38 @@
-import { hot } from 'react-hot-loader/root'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import Spinner from './components/material/Spinner'
 import Routes from './Routes'
 import UserMenu from './components/UserMenu'
 import { useStoredUser } from './modules/customHooks'
-import { AppState } from './store'
+import { RootState } from './core/store/store'
 
 import Logo from './assets/images/logo.svg'
-import settings from './config/settings.json'
+import settings from './core/config/settings.json'
 import './App.css'
 
 const App: FC = () => {
-  const { data: user, isLocalStorageChecked } = useSelector((state: AppState) => state.user)
-  const [loaderMounted, setLoaderState] = useState(true)
+  const pageLoaderClassList = useRef('')
+  const { data: user, isLocalStorageChecked } = useSelector((state: RootState) => state.user)
+  const [loaderIsActive, setLoaderIsActive] = useState<boolean>(true)
+  const containerStyle = user.id.length > 0
+    ? { marginTop: 62 }
+    : { marginTop: 0 }
 
   useStoredUser(user)
 
-  if (!isLocalStorageChecked || loaderMounted) {
-    let pageLoaderClassList = 'pageloader'
-
+  useEffect(() => {
     if (isLocalStorageChecked) {
-      pageLoaderClassList += ' fadeOut'
-
-      setTimeout(() => {
-        setLoaderState(false)
-      }, 1000)
+      pageLoaderClassList.current += ' fadeOut'
+      setTimeout(() => { setLoaderIsActive(false) }, 1000)
     }
+  }, [])
+
+  if (!isLocalStorageChecked || loaderIsActive) {
+    pageLoaderClassList.current = 'pageloader'
 
     return (
-      <div className={pageLoaderClassList}>
+      <div className={pageLoaderClassList.current}>
         <Spinner color='#fff' />
       </div>
     )
@@ -38,10 +40,8 @@ const App: FC = () => {
 
   return (
     <BrowserRouter>
-      {
-        user.id && <UserMenu />
-      }
-      <div className="container" style={!user.id ? { marginTop: 62 } : { marginTop: 0 }}>
+      {user.id.length > 0 && <UserMenu />}
+      <div className="container" style={containerStyle}>
         <img src={Logo} alt={settings.appName} />
         <div className="content">
           <Routes />
@@ -51,4 +51,4 @@ const App: FC = () => {
   )
 }
 
-export default hot(App)
+export default App

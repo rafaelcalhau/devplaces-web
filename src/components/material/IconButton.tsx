@@ -4,13 +4,13 @@ import Fab from '@material-ui/core/Fab'
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles'
 
 interface IconButtonProps {
-  className?: string;
-  color?: 'default' | 'inherit' | 'primary' | 'secondary';
-  children: ReactElement | [ReactElement];
-  label: string;
-  icon?: JSX.Element;
-  onClick?: Function;
-  size?: 'small' | 'medium' | 'large';
+  className?: string
+  color?: 'default' | 'inherit' | 'primary' | 'secondary'
+  children: ReactElement | [ReactElement]
+  label: string
+  icon?: JSX.Element
+  onClick?: (() => void)
+  size?: 'small' | 'medium' | 'large'
 }
 
 function IconButton (props: IconButtonProps): ReactElement {
@@ -28,19 +28,19 @@ function IconButton (props: IconButtonProps): ReactElement {
   const classes = useStyles({})
 
   const _onClick = (): void => {
-    setTimeout(() => props.onClick && props.onClick(), 400)
+    setTimeout(() => props?.onClick?.(), 400)
   }
 
   let componentClasses = classes.margin
 
-  if (props.className) {
+  if (props.className !== undefined) {
     componentClasses += ` ${props.className}`
   }
 
   return (
     <Fab
-      size={props.size || 'small'}
-      color={props.color || 'secondary'}
+      size={props?.size ?? 'small'}
+      color={props?.color ?? 'secondary'}
       aria-label={props.label}
       className={componentClasses}
       onClick={_onClick}
