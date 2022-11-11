@@ -17,7 +17,7 @@ const App: FC = () => {
   const [loaderIsActive, setLoaderIsActive] = useState<boolean>(true)
   const containerStyle = user.id.length > 0
     ? { marginTop: 62 }
-    : { marginTop: 0 }
+    : { marginTop: 0, display: 'flex', justifyContent: 'center' }
 
   useStoredUser(user)
 

@@ -90,6 +90,7 @@ button.btn.basic:hover {
   display: flex;
   flex-direction: column;
   margin: 20px auto;
+  min-height: 100vh;
 }
 
 .content {
