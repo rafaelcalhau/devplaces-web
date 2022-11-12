@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import Spinner from './components/material/Spinner'
@@ -12,7 +12,6 @@ import settings from './core/config/settings.json'
 import './App.css'
 
 const App: FC = () => {
-  const pageLoaderClassList = useRef('')
   const { data: user, isLocalStorageChecked } = useSelector((state: RootState) => state.user)
   const [loaderIsActive, setLoaderIsActive] = useState<boolean>(true)
   const containerStyle = user.id.length > 0
@@ -22,17 +21,12 @@ const App: FC = () => {
   useStoredUser(user)
 
   useEffect(() => {
-    if (isLocalStorageChecked) {
-      pageLoaderClassList.current += ' fadeOut'
-      setTimeout(() => { setLoaderIsActive(false) }, 1000)
-    }
-  }, [])
+    if (isLocalStorageChecked) setLoaderIsActive(false)
+  }, [isLocalStorageChecked])
 
-  if (!isLocalStorageChecked || loaderIsActive) {
-    pageLoaderClassList.current = 'pageloader'
-
+  if (loaderIsActive) {
     return (
-      <div className={pageLoaderClassList.current}>
+      <div>
         <Spinner color='#fff' />
       </div>
     )
