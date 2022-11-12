@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
-import socketio from 'socket.io-client'
+import io from 'socket.io-client'
 import moment from 'moment'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
@@ -31,24 +31,16 @@ const Dashboard: FC = () => {
   const bookings = useSelector((state: RootState) => state.bookings.data)
   const spots = useSelector((state: RootState) => state.spots)
   const user = useSelector((state: RootState) => state.user.data)
-
-  const socket = useMemo(() => socketio(socketUrl, {
-    query: { userId: user.id, type: 'web' }
-  }), [user.id])
-
-  useLoadBookings(null)
-  useLoadSpots()
-
-  // onUpdate
-  useEffect(() => {
-    if (deletedId.length > 0 && !spots.error && !spots.loading) {
-      setDeletedId('')
-    }
-  }, [deletedId, spots.error, spots.loading])
-
-  useEffect(() => {
-    socket.on('booking_request', (data: Booking) => dispatch(newBookingRequest(data)))
-  }, [socket])
+  const socket = useRef(
+    io(
+      socketUrl,
+      {
+        autoConnect: false,
+        query: { userId: user.id, type: 'web' },
+        transports: ['websocket', 'polling']
+      }
+    )
+  ).current
 
   const acceptanceRequest = (approved: boolean, bookingId: string, spotId: string): void => {
     dispatch(approvalRequest(approved, bookingId, spotId, user.id, user.token))
@@ -87,16 +79,40 @@ const Dashboard: FC = () => {
 
   const showActionButtons = (spotId: string): void => setSpotHover(spotId)
 
-  if (loaderMounted || !spots.verified) {
-    let loaderClasses = 'pageloader'
+  useLoadBookings(null)
+  useLoadSpots()
 
-    if (spots.verified) {
-      setTimeout(() => setLoaderStatus(false), 1000)
-      loaderClasses += ' fadeOut'
+  // onUpdate
+  useEffect(() => {
+    if (deletedId.length > 0 && !spots.error && !spots.loading) {
+      setDeletedId('')
     }
+  }, [deletedId, spots.error, spots.loading])
 
+  // socket connection
+  useEffect(() => {
+    if (user?.id === undefined) return
+    socket.connect()
+    socket.on('booking_request', (data: Booking) => dispatch(newBookingRequest(data)))
+    socket.on('connect_error', () => {
+      // revert to classic upgrade
+      socket.io.opts.transports = ['polling', 'websocket']
+    })
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [user?.id])
+
+  useEffect(() => {
+    if (loaderMounted || spots.verified) {
+      setLoaderStatus(false)
+    }
+  }, [loaderMounted, spots?.verified])
+
+  if (loaderMounted || !spots.verified) {
     return (
-      <div className={loaderClasses}>
+      <div className='pageloader'>
         <Spinner color='#6300B1' />
         <div className='loadertext'>Loading available spots...</div>
       </div>
@@ -121,7 +137,8 @@ const Dashboard: FC = () => {
             return (
               <li key={request._id}>
                 <p>
-                  <strong>{request.user.name}</strong> is requesting a spot in <strong>{request.spot.company}</strong> on <strong>{moment(new Date(request.date)).format('dddd, LL')}</strong>
+                  <strong>{request.user.name}</strong> is requesting a spot in
+                   <strong>{request.spot.company}</strong> on <strong>{moment(new Date(request.date)).format('dddd, LL')}</strong>
                 </p>
                 <button
                   className='accept'
@@ -176,7 +193,7 @@ const Dashboard: FC = () => {
                 style={{ backgroundImage: `url(${remoteImagesUrl}/${spot.thumbnail})` }}
               />
               <div className='title'>{spot.company}</div>
-              <div className='price'>{spot.price === 0 ? 'Free' : `$${spot.price}/day`}</div>
+              <div className='price'>{(spot.price === 0 || spot.price === null) ? 'Free' : `$${spot.price}/day`}</div>
             </li>
           ))
         }
