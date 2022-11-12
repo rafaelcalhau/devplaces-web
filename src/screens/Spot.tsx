@@ -45,23 +45,33 @@ const Spot = ({ history, location }: IRouteComponentProps): ReactElement<any> =>
   const [success, setSuccess] = useState('')
 
   const [spotId, setSpotId] = useState<string>('')
-  const [thumbnail, setThumbnail] = useState<string | null>(null)
+  const [thumbnail, setThumbnail] = useState<File | string | null>(null)
   const [company, setCompany] = useState<string>('')
   const [technologies, setTechnologies] = useState<string>('')
   const [price, setPrice] = useState<string>('')
 
-  const isEdit = location?.state.data !== undefined
+  const isEdit = location?.state?.data !== undefined
   const [operation, setOperation] = useState<string>('')
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const dispatch = useDispatch()
   const { error: requestError } = useSelector((state: RootState) => state.spots)
   const user = useSelector((state: RootState) => state.user.data)
 
-  const handleFile = (file: FileList | null): void => {
-    if (!Array.isArray(file)) {
+  const preview = useMemo(() => {
+    if (thumbnail === null) {
+      return
+    } else if (typeof thumbnail === 'string') {
+      return thumbnail
+    }
+
+    return URL.createObjectURL(thumbnail)
+  }, [thumbnail])
+
+  const handleFile = (files: FileList | null): void => {
+    if (files === null) {
       setThumbnail(null)
     } else {
-      setThumbnail(file[0].filename)
+      setThumbnail(files[0])
     }
   }
 
@@ -77,7 +87,7 @@ const Spot = ({ history, location }: IRouteComponentProps): ReactElement<any> =>
     } else {
       const data = new FormData()
 
-      if (typeof thumbnail === 'object') {
+      if (thumbnail instanceof File) {
         data.append('thumbnail', thumbnail)
       }
 
@@ -104,14 +114,6 @@ const Spot = ({ history, location }: IRouteComponentProps): ReactElement<any> =>
     }
   }
 
-  const preview = useMemo(() => {
-    if (thumbnail !== null && typeof thumbnail === 'object') {
-      return URL.createObjectURL(thumbnail)
-    }
-
-    return thumbnail
-  }, [thumbnail])
-
   // onMount
   useEffect(() => {
     if (isEdit) {
@@ -133,7 +135,7 @@ const Spot = ({ history, location }: IRouteComponentProps): ReactElement<any> =>
         setTechnologies(technologies)
       }
 
-      if (thumbnail.length > 0) {
+      if (typeof thumbnail === 'string') {
         setThumbnail(`${settings.remoteImagesUrl}/${thumbnail}`)
       }
     }
@@ -190,9 +192,9 @@ const Spot = ({ history, location }: IRouteComponentProps): ReactElement<any> =>
         <label
           id='thumbnail'
           className={(thumbnail != null) ? 'hasThumbnail' : ''}
-          style={preview !== null ? { backgroundImage: `url(${preview})` } : {}}
+          style={preview !== undefined ? { backgroundImage: `url(${preview})` } : {}}
         >
-          <input type='file' onChange={(e): void => handleFile(e.target.files)} />
+          <input type='file' onChange={evt => handleFile(evt.target.files)} />
           <img src={Camera} alt='Upload' />
         </label>
 
