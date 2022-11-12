@@ -75,8 +75,10 @@ export function * update (action: ActionSubmit): Generator<any, any, GeneratorRe
         userid
       }
     })
-    if (response !== undefined) yield put(updateSuccess(response))
-  } catch {
-    yield put(updateFailure())
+    if (response !== undefined) {
+      yield put(updateSuccess(response))
+    }
+  } catch (err) {
+    yield put(updateFailure(err.message))
   }
 }

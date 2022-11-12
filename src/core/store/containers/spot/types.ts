@@ -1,24 +1,24 @@
 export interface ActionDeletePayload {
-  id: string;
-  token: string;
-  userid: string;
+  id: string
+  token: string
+  userid: string
 }
 
 export interface ActionDelete {
-  type: string;
-  payload: ActionDeletePayload;
+  type: string
+  payload: ActionDeletePayload
 }
 
 export interface ActionLoad {
-  type: string;
+  type: string
   payload: {
-    token: string;
-  };
+    token: string
+  }
 }
 
 export interface ActionSubmit {
-  type: string;
-  payload: SpotSubmit;
+  type: string
+  payload: SpotSubmit
 }
 
 export enum SpotActions {
@@ -37,23 +37,24 @@ export enum SpotActions {
 }
 
 export interface Spot {
-  _id: string;
-  company: string;
-  price: number;
-  thumbnail: string;
-  technologies: string[];
+  _id: string
+  company: string
+  price: number
+  thumbnail: string
+  technologies: string[]
 }
 
 export interface SpotSubmit {
-  data: FormData;
-  id?: string;
-  token: string;
-  userid: string;
+  data: FormData
+  id?: string
+  token: string
+  userid: string
 }
 
 export interface SpotsState {
-  data: Spot[];
-  error: boolean;
-  loading: boolean;
-  verified: boolean;
+  data: Spot[]
+  error: boolean
+  errorMessage: string
+  loading: boolean
+  verified: boolean
 }

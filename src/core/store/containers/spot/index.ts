@@ -4,6 +4,7 @@ import { SpotActions, SpotsState, Spot } from './types'
 const INITIAL_STATE: SpotsState = {
   data: [],
   error: false,
+  errorMessage: '',
   loading: false,
   verified: false
 }
@@ -16,6 +17,7 @@ const reducer: Reducer<SpotsState> = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         error: true,
+        errorMessage: action.payload.message ?? '',
         loading: false
       }
     case SpotActions.CREATE_REQUEST:
@@ -26,7 +28,7 @@ const reducer: Reducer<SpotsState> = (state = INITIAL_STATE, action) => {
       }
     case SpotActions.CREATE_SUCCESS:
       return (function (): SpotsState {
-        if (action.payload.data._id) {
+        if (action.payload?.data?._id !== undefined) {
           return {
             ...state,
             data: [...state.data, action.payload.data],
@@ -51,7 +53,7 @@ const reducer: Reducer<SpotsState> = (state = INITIAL_STATE, action) => {
       }
     case SpotActions.DELETE_SUCCESS:
       return (function (): SpotsState {
-        if (action.payload) {
+        if (action.payload !== undefined) {
           const spots = state.data
           const spotIndex = spots.findIndex(spot => spot._id === action.payload.id)
 
@@ -108,10 +110,10 @@ const reducer: Reducer<SpotsState> = (state = INITIAL_STATE, action) => {
       return (function (): SpotsState {
         const { data: updated } = action.payload
 
-        if (updated._id) {
-          const spots = state.data
+        if (updated?._id !== undefined) {
+          const spots = [...state.data]
 
-          if (!spots.length) {
+          if (spots.length === 0) {
             return state
           }
 
@@ -121,7 +123,7 @@ const reducer: Reducer<SpotsState> = (state = INITIAL_STATE, action) => {
             const spot = spots.find(spot => spot._id === updated._id)
             const updatedSpot: Spot = {
               _id: updated._id,
-              thumbnail: updated.thumbnail.length ? updated.thumbnail : (spot && spot.thumbnail),
+              thumbnail: updated?.thumbnail?.length > 0 ? updated.thumbnail : spot?.thumbnail,
               company: updated.company,
               price: updated.price,
               technologies: updated.technologies

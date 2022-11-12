@@ -19,4 +19,4 @@ export const signupFailure = (): Action<SpotActions.DELETE_FAILURE> => action(Sp
 
 export const updateRequest = (data: SpotSubmit): Action<SpotActions.UPDATE_REQUEST> => action(SpotActions.UPDATE_REQUEST, data)
 export const updateSuccess = (data: Spot): Action<SpotActions.UPDATE_SUCCESS> => action(SpotActions.UPDATE_SUCCESS, { data })
-export const updateFailure = (): Action<SpotActions.UPDATE_FAILURE> => action(SpotActions.UPDATE_FAILURE)
+export const updateFailure = (message?: string): Action<SpotActions.UPDATE_FAILURE> => action(SpotActions.UPDATE_FAILURE, { message })
